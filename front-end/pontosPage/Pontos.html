@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CSGO Brasil</title>
+	<link rel="stylesheet" type="text/css" href="style-pontos.css">
+
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+</head>
+
+<body>
+	<iframe src="/headerStatic/header.html" frameborder="0" id="staticHeader"></iframe>
+
+
+	<div id="page-content">
+
+		<div class="content">
+			<!-- Card -->
+			<nav id="container_cards">
+				<div id="page-wrap">
+					<img src="../images/coin.gif" alt="Adquira seus pontos">
+				</div>
+				<div id="sidebar">
+					<div class="top_card">
+						<div class="logo">
+							<img src="../images/logo.png" alt="Logo">
+						</div>
+						<div class="text_top">
+							<h3>PONTOS CSGO</h3>
+						</div>
+					</div>
+					<hr>
+					<br>
+					<div class="container">
+						<div class="pontos">Pontos: <label id="pontos">0</label></div>
+						<div class="divPoints" onclick="selecionarPontos(this, 500)">500 pontos</div>
+						<br>
+						<div class="divPoints" onclick="selecionarPontos(this, 1000)">1000 pontos</div>
+						<br>
+						<div class="divPoints" onclick="selecionarPontos(this, 2000)">2000 pontos</div>
+						<br>
+						<div class="divPoints" onclick="selecionarPontos(this, 5000)">5000 pontos</div>
+						<div class="btn">
+							<button class="btnPoints" id="confirmarCompra" onclick="confirmarCompra()"> Confirmar
+								compra</button>
+						</div>
+					</div>
+
+				</div>
+			</nav>
+
+			<!-- Linha separadora -->
+			<div class="line"></div>
+			<div class="line2"></div>
+
+			<!-- Texto separatório -->
+			<div class="interm">
+				<div>
+					<h3 class="text-middle">FORMAS DE PAGAMENTO</h3>
+				</div>
+			</div>
+
+			<!-- Formas de pagamento -->
+			<div class="pagamento">
+				<img src="https://d2r9epyceweg5n.cloudfront.net/stores/001/860/687/rte/NO%20CART%C3%83O%20(1).png"
+					alt="Formas de pagamento">
+			</div>
+
+			<!-- Linha separadora -->
+			<div class="line"></div>
+			<div class="line2"></div>
+		</div>
+
+		<iframe src="/footerStatic/footerStatic.html" frameborder="0" id="staticFooter"></iframe>
+
+	</div>
+
+	<!-- Body -->
+
+
+	<script src="points.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,333 @@
+#staticHeader {
+    left: 0;
+    top: 0;
+    width: 100%;
+    position: fixed;
+    z-index: 11;
+  }
+  
+  #page-content{
+    position: relative;
+    min-height: 100vh;
+    height: 100%;
+  }
+  
+  #staticFooter {
+    width: 100%;
+    height: 303px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin-bottom: 1px;
+  }
+  
+  .content {
+    margin-top: 130px;
+    padding-bottom: 350px;
+  }
+  
+  html,
+  body {
+    max-width: 100%;
+    margin: 0;
+    margin-right: 5px;
+    overflow-x: hidden;
+  }
+  
+  .interm {
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-size: 30px;
+    text-align: center;
+    margin-bottom: 5px;
+    margin-top: 35px;
+  }
+  
+  .text-middle {
+    margin: 5px;
+    padding-top: 50px;
+    padding-bottom: 10px;
+  }
+  
+  .top-line {
+    position: absolute;
+    z-index: 10;
+    width: 40%;
+    padding: 1px;
+    /* border-bottom: 1px solid #00000000; */
+    margin-left: 30%;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+  }
+  
+  .bottom-line {
+    width: 100%;
+    padding: 5px;
+    border-bottom: 1px solid #cccccc00;
+    margin-bottom: 50px;
+  }
+  
+  /* Slider */
+  .carousel {
+    position: relative;
+    box-shadow: 0px 1px 6px rgba(0, 0, 0, 0.64);
+    margin-bottom: 10px;
+    margin-top: 25px;
+    margin-left: 100px;
+    margin-right: 100px;
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 100%;
+    scroll-snap-align: start;
+    scroll-padding-inline: 5px;
+    border-radius: 7px;
+    background-color: white;
+    color: dimgray;
+    overflow: hidden;
+    border: 2px solid black;
+  }
+  
+  .carousel-item>img {
+    inline-size: 500px;
+    object-fit: cover;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  
+  .carousel-inner {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 770px;
+  }
+  
+  .carousel-open:checked+.carousel-item {
+    position: static;
+    opacity: 100;
+  }
+  
+  .carousel-item {
+    height: 100%;
+    position: absolute;
+    opacity: 0;
+  }
+  
+  .carousel-control {
+    background: rgba(0, 0, 0, 0.28);
+    border-radius: 50%;
+    color: #fff;
+    cursor: pointer;
+    display: none;
+    font-size: 40px;
+    height: 40px;
+    line-height: 35px;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translate(0, -50%);
+    cursor: pointer;
+    -ms-transform: translate(0, -50%);
+    transform: translate(0, -50%);
+    text-align: center;
+    width: 40px;
+    z-index: 10;
+  }
+  
+  .carousel-control.prev {
+    position: absolute;
+    left: 2%;
+  }
+  
+  .carousel-control.next {
+    right: 2%;
+  }
+  
+  .carousel-control:hover {
+    background: rgba(0, 0, 0, 0.8);
+    color: #aaaaaa;
+  }
+  
+  #carousel-1:checked~.control-1,
+  #carousel-2:checked~.control-2,
+  #carousel-3:checked~.control-3,
+  #carousel-4:checked~.control-4,
+  #carousel-5:checked~.control-5,
+  #carousel-6:checked~.control-6,
+  #carousel-7:checked~.control-7,
+  #carousel-8:checked~.control-8 {
+    display: block;
+  }
+  
+  .carousel-indicators {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    bottom: 2%;
+    left: 0;
+    right: 0;
+    text-align: center;
+    z-index: 10;
+  }
+  
+  .carousel-indicators li {
+    display: inline-block;
+    margin: 0 5px;
+  }
+  
+  .carousel-bullet {
+    color: #fff;
+    cursor: pointer;
+    display: block;
+    font-size: 35px;
+  }
+  
+  .carousel-bullet:hover {
+    color: #aaaaaa;
+  }
+  
+  /* Caso a bolinha for selecionada, ela fica azul */
+  #carousel-1:checked~.control-1~.carousel-indicators li:nth-child(1) .carousel-bullet,
+  #carousel-2:checked~.control-2~.carousel-indicators li:nth-child(2) .carousel-bullet,
+  #carousel-3:checked~.control-3~.carousel-indicators li:nth-child(3) .carousel-bullet,
+  #carousel-4:checked~.control-4~.carousel-indicators li:nth-child(4) .carousel-bullet,
+  #carousel-5:checked~.control-5~.carousel-indicators li:nth-child(5) .carousel-bullet,
+  #carousel-6:checked~.control-6~.carousel-indicators li:nth-child(6) .carousel-bullet,
+  #carousel-7:checked~.control-7~.carousel-indicators li:nth-child(7) .carousel-bullet,
+  #carousel-8:checked~.control-8~.carousel-indicators li:nth-child(8) .carousel-bullet {
+    color: #428bca;
+  }
+  
+  /* Animação para cards */
+  @keyframes scroll {
+    0% {
+      transform: translateX(0);
+    }
+  
+    100% {
+      transform: translateX(calc(-250px * 6))
+    }
+  }
+  
+  
+  #logos-home-page .slider:before,
+  #logos-home-page .slider:after {
+    background: linear-gradient(to right, rgb(255, 255, 255, 0) 80%, rgba(255, 255, 255, 0) 100%);
+    content: "";
+    height: 300px;
+    position: absolute;
+    width: 300px;
+    z-index: 2;
+  }
+  
+  #logos-home-page .slider:after {
+    right: 0;
+    top: 0;
+    transform: rotateZ(180deg);
+  }
+  
+  #logos-home-page .slider:before {
+    left: 0;
+    top: 0;
+  }
+  
+  #logos-home-page .slide-track {
+    animation: scroll 40s linear infinite;
+    display: flex;
+    width: calc(250px * 14);
+  }
+  
+  #logos-home-page div.slide {
+    padding: 0 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .items {
+    border: 1px solid;
+    height: 300px;
+    width: 250px;
+    border-radius: 10px;
+    background-color: #7c8c9b;
+    transition: 0.2s ease-in-out;
+  }
+  
+  #logos-home-page ul {
+    list-style-type: none;
+    font-size: large;
+  }
+  
+  .cardimg {
+    height: 150px;
+  }
+  
+  .items:hover {
+    box-shadow: 5px 5px 10px rgb(255, 0, 0);
+    position: relative;
+    top: 20px;
+  }
+  
+  .grade {
+    display: flex;
+    gap: 2rem;
+    flex: 1 0;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  #skin-page ul {
+    list-style-type: none;
+    font-size: large;
+  }
+  
+  .soldout {
+    border: 1px solid;
+    height: 300px;
+    width: 250px;
+    border-radius: 10px;
+    background-color: #7c8c9b;
+    transition: 0.2s ease-in-out;
+  } 
+  
+  
+  
+  #popupContainer {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.911);
+    width: 500px;
+    height: 150px;
+    padding: 20px;
+    text-align: center;
+    z-index: 100;
+  }
+  
+  #popupContent {
+    color: #fff;
+  }
+  
+  #closePopup {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #fff;
+    color: #000;
+    border: none;
+    cursor: pointer;
+  }
+  
+  #overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.089);
+    z-index: 9999;
+    pointer-events: none;
+  }
+  

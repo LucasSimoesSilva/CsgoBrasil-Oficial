@@ -1,0 +1,12 @@
+{
+  "name": "csgobrasil",
+  "version": "1.0.0",
+  "description": "- Projeto para a avaliação A3 das UCs de Sistemas Distribuídos e Mobile e Usabilidade, Desenvolvimento Web, Mobile e Jogos",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "",
+  "license": "ISC"
+}

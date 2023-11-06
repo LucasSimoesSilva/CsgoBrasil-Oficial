@@ -1,0 +1,77 @@
+#staticHeader {
+  left: 0;
+  top: 0;
+  width: 100%;
+  position: fixed;
+  z-index: 11;
+}
+
+#page-content{
+  position: relative;
+  min-height: 100vh;
+  height: 100%;
+}
+
+#staticFooter {
+  width: 100%;
+  height: 303px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin-bottom: 1px;
+}
+
+.container {
+  margin-top: 130px;
+  padding-bottom: 450px;
+}
+
+html,
+body {
+  max-width: 100%;
+  margin: 0;
+  margin-right: 5px;
+  overflow-x: hidden;
+}
+
+.interm {
+  font-family: "Lucida Console", "Courier New", monospace;
+  font-size: 15px;
+  text-align: center;
+  margin-bottom: 5px;
+  margin-top: 35px;
+}
+
+.table-container {
+  display: flex;
+  justify-content: center;
+}
+
+table {
+  border-collapse: collapse;
+  width: 80%;
+  margin-top: 20px;
+}
+
+th,
+td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+
+/* CSS reset */
+*,
+*:before,
+*:after {
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+.container p {
+  margin-bottom: 15px;
+}

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CSGO Brasil</title>
+	<link rel="stylesheet" type="text/css" href="style-home.css">
+	<link rel="shortcut icon" href="/images/logofavicon.ico" type="image/x-icon">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+</head>
+
+<body>
+
+	<iframe src="/headerStatic/header.html" frameborder="0" id="staticHeader"></iframe>
+
+	<div id="page-content">
+		<div class="content">
+
+			<div class="interm">
+				<div class="block-interm">
+					<h3 class="text-middle">FUTURAS SKINS</h3>
+				</div>
+			</div>
+
+			<div class="top-line"></div>
+			<div class="bottom-line"></div>
+
+			<!-- Slider -->
+			<div class="carousel">
+				<div class="carousel-inner">
+					<input class="carousel-open" type="radio" id="carousel-1" name="carousel" aria-hidden="true"
+						hidden="" checked="checked">
+					<div class="carousel-item">
+						<img alt="Glock-18 - Bullet Queen">
+					</div>
+					<input class="carousel-open" type="radio" id="carousel-2" name="carousel" aria-hidden="true"
+						hidden="">
+					<div class="carousel-item">
+						<img alt="Dual Berettas - Melondrama">
+					</div>
+					<input class="carousel-open" type="radio" id="carousel-3" name="carousel" aria-hidden="true"
+						hidden="">
+					<div class="carousel-item">
+						<img alt="USP-S - Ticket to Hell">
+					</div>
+					<input class="carousel-open" type="radio" id="carousel-4" name="carousel" aria-hidden="true"
+						hidden="">
+					<div class="carousel-item">
+						<img alt="AWP - Doodle Lore">
+					</div>
+					<input class="carousel-open" type="radio" id="carousel-5" name="carousel" aria-hidden="true"
+						hidden="">
+					<div class="carousel-item">
+						<img alt="M4A4 - Temukau">
+					</div>
+					<input class="carousel-open" type="radio" id="carousel-6" name="carousel" aria-hidden="true"
+						hidden="">
+					<div class="carousel-item">
+						<img alt="MAC-10 - Ensnared">
+					</div>
+					<input class="carousel-open" type="radio" id="carousel-7" name="carousel" aria-hidden="true"
+						hidden="">
+					<div class="carousel-item">
+						<img alt="PP-Bizon - Space Cat">
+					</div>
+					<input class="carousel-open" type="radio" id="carousel-8" name="carousel" aria-hidden="true"
+						hidden="">
+					<div class="carousel-item">
+						<img alt="Five-SeveN - Scrawl">
+					</div>
+
+					<!-- Lógica para funcionamento das setas -->
+					<label for="carousel-8" class="carousel-control prev control-1">‹</label>
+					<label for="carousel-2" class="carousel-control next control-1">›</label>
+					<label for="carousel-1" class="carousel-control prev control-2">‹</label>
+					<label for="carousel-3" class="carousel-control next control-2">›</label>
+					<label for="carousel-2" class="carousel-control prev control-3">‹</label>
+					<label for="carousel-4" class="carousel-control next control-3">›</label>
+					<label for="carousel-3" class="carousel-control prev control-4">‹</label>
+					<label for="carousel-5" class="carousel-control next control-4">›</label>
+					<label for="carousel-4" class="carousel-control prev control-5">‹</label>
+					<label for="carousel-6" class="carousel-control next control-5">›</label>
+					<label for="carousel-5" class="carousel-control prev control-6">‹</label>
+					<label for="carousel-7" class="carousel-control next control-6">›</label>
+					<label for="carousel-6" class="carousel-control prev control-7">‹</label>
+					<label for="carousel-8" class="carousel-control next control-7">›</label>
+					<label for="carousel-7" class="carousel-control prev control-8">‹</label>
+					<label for="carousel-1" class="carousel-control next control-8">›</label>
+
+					<!-- Input de seleção -->
+					<ol class="carousel-indicators">
+						<li>
+							<label for="carousel-1" class="carousel-bullet">•</label>
+						</li>
+						<li>
+							<label for="carousel-2" class="carousel-bullet">•</label>
+						</li>
+						<li>
+							<label for="carousel-3" class="carousel-bullet">•</label>
+						</li>
+						<li>
+							<label for="carousel-4" class="carousel-bullet">•</label>
+						</li>
+						<li>
+							<label for="carousel-5" class="carousel-bullet">•</label>
+						</li>
+						<li>
+							<label for="carousel-6" class="carousel-bullet">•</label>
+						</li>
+						<li>
+							<label for="carousel-7" class="carousel-bullet">•</label>
+						</li>
+						<li>
+							<label for="carousel-8" class="carousel-bullet">•</label>
+						</li>
+					</ol>
+				</div>
+			</div>
+
+
+			<div class="interm">
+				<div class="block-interm">
+					<h3 class="text-middle">MELHORES SKINS DO MERCADO</h3>
+				</div>
+			</div>
+
+			<div class="top-line"></div>
+			<div class="bottom-line"></div>
+
+
+			<div class="container" id="skin-page">
+				<div class="grade">
+				</div>
+			</div>
+
+
+			<!-- Separador de conteúdo  -->
+			<div class="interm">
+				<div class="block-interm">
+					<h3 class="text-middle">NOVAS SKINS ADICIONADAS!</h3>
+				</div>
+			</div>
+
+			<!-- Linha separadora -->
+			<div class="top-line"></div>
+			<div class="bottom-line"></div>
+
+			
+
+			<!-- Cards de skins -->
+			<div id="logos-home-page">
+				<div class="slider">
+					<div class="slide-track" id="sliderDiv">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<iframe src="/footerStatic/footerStatic.html" frameborder="0" id="staticFooter"></iframe>
+
+	</div>
+
+	<script src="imagesScript.js"></script>
+
+</body>
+
+</html>

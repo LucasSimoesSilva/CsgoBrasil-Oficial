@@ -1,0 +1,83 @@
+#staticHeader {
+  left: 0;
+  top: 0;
+  width: 100%;
+  position: fixed;
+  z-index: 11;
+}
+
+#page-content{
+  position: relative;
+  min-height: 100vh;
+  height: 100%;
+}
+
+#staticFooter {
+  width: 100%;
+  height: 303px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin-bottom: 1px;
+}
+
+.content {
+  margin-top: 130px;
+  padding-bottom: 350px;
+}
+
+html,
+body {
+  max-width: 100%;
+  margin: 0;
+  margin-right: 5px;
+  overflow-x: hidden;
+}
+
+/* Cards */
+.grade {
+  display: flex;
+  gap: 2rem;
+  flex: 1 0;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.items {
+  border: 1px solid;
+  height: 300px;
+  width: 250px;
+  border-radius: 10px;
+  background-color: #7c8c9b;
+  transition: 0.2s ease-in-out;
+}
+
+#skin-page ul, #skin-page p  {
+  list-style-type: none;
+  font-size: large;
+}
+
+.cardimg {
+  height: 150px;
+}
+
+.items:hover {
+  box-shadow: 5px 5px 10px rgb(255, 0, 0);
+  position: relative;
+  top: 10px;
+}
+
+.alertText {
+  color: rgb(179, 255, 179);
+  font-style: italic;
+  position: relative;
+  right: 20px;
+  height: 20px;
+  width: 440px;
+  font-size: large;
+  padding: 1px 30px 20px 30px;
+}
+
+.invisibleText {
+  display: none;
+}
