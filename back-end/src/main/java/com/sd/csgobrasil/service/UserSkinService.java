@@ -4,7 +4,6 @@ import com.sd.csgobrasil.entity.DTO.SkinWithState;
 import com.sd.csgobrasil.entity.DTO.UserSkin;
 import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.repository.UserRepository;
-import com.sd.csgobrasil.repository.UserSkinRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +13,6 @@ import java.util.List;
 @Service
 public class UserSkinService {
 
-//    @Autowired
-//    private UserSkinRepository repository;
 
     @Autowired
     private UserRepository userRepository;
