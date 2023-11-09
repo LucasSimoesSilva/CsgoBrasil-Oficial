@@ -1,8 +1,12 @@
 # CSGOBrasil
-- Projeto para a avaliação A3 da UC de Gestão e Qualidade de Software
+- Projeto para a avaliação A3 das UCs de Sistemas Distribuídos e Mobile e Usabilidade, Desenvolvimento Web, Mobile e Jogos
 
 ## Integrantes
+- Andy Hyong Tae Choi Youn | RA: 12522142446
+- Felipe Daura | RA: 1252214120
+- Giovanni Lopes Campos | RA: 12522149685
 - Lucas Simões Carvalho da Silva | RA: 12522161179
+- Marcelo Henrique da Silva Ventura | RA: 12522128126
 
 ## Back-end
 - Linguagem: Java JDK 17.0.3.1
