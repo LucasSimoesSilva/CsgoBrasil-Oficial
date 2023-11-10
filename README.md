@@ -1,12 +1,8 @@
 # CSGOBrasil
-- Projeto para a avaliação A3 das UCs de Sistemas Distribuídos e Mobile e Usabilidade, Desenvolvimento Web, Mobile e Jogos
+- Projeto para a avaliação A3 da UC de Gestão e Qualidade de Software
 
 ## Integrantes
-- Andy Hyong Tae Choi Youn | RA: 12522142446
-- Felipe Daura | RA: 1252214120
-- Giovanni Lopes Campos | RA: 12522149685
 - Lucas Simões Carvalho da Silva | RA: 12522161179
-- Marcelo Henrique da Silva Ventura | RA: 12522128126
 
 ## Back-end
 - Linguagem: Java JDK 17.0.3.1
@@ -53,7 +49,7 @@ Passos para executar o código:
 
 4 - Execute em uma IDE que tenha suporte para a linguagem mysql o script `sql-executar.sql` da pasta `sql-scripts`;(recomendado: MySQL Workbench 8.0 ou DBeaver Community)
 
-5 - Dentro da pasta `back-end` através da IDE, ajuste no arquivo `src/main/resources/application.properties` e na classe `src/main/java/com/sd/csgobrasil/conn/ConnectionJdbc.java` os atributos url, username e password de forma com que correspondam com as configurações de seu sistema para banco de dados;
+5 - Dentro da pasta `back-end` através da IDE, ajuste no arquivo `src/main/resources/application.properties` os atributos url, username e password de forma com que correspondam com as configurações de seu sistema para banco de dados;
 
 6 - Inicialize através da IDE a classe em Java `src/main/java/com/sd/csgobrasil/CsgobrasilApplication.java`;
 
