@@ -1,4 +1,4 @@
 package com.sd.csgobrasil.unitario.controller;
 
-public class UserController {
+public class UserControllerTest {
 }

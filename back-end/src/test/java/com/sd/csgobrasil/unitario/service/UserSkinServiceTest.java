@@ -1,4 +1,4 @@
 package com.sd.csgobrasil.unitario.service;
 
-public class MovementService {
+public class UserSkinServiceTest {
 }

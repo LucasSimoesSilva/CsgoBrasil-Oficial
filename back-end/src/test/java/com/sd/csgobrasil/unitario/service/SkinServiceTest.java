@@ -1,4 +1,4 @@
 package com.sd.csgobrasil.unitario.service;
 
-public class UserSkinService {
+public class SkinServiceTest {
 }
