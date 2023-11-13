@@ -1,0 +1,77 @@
+[33mcommit e0ad09368c6dd1aae8849ab707c55a61c8b22430[m[33m ([m[1;36mHEAD -> [m[1;32mtests[m[33m, [m[1;31morigin/tests[m[33m)[m
+Author: LucasSimoesSilva <lucassimoes.carvalho@gmail.com>
+Date:   Mon Nov 13 20:35:52 2023 -0300
+
+    Adicionando validacao na classe skin
+
+[33mcommit 9e99821de8fd139c83d91a2d9c69797fe7d7cb4f[m
+Author: LucasSimoesSilva <lucassimoes.carvalho@gmail.com>
+Date:   Mon Nov 13 20:29:30 2023 -0300
+
+    Teste negativo para returnById no controller de skin e adicionando controller de exception
+
+[33mcommit e03c8cbde5c3bcdce27eea208a082f34bd18f9e8[m
+Author: sam <samuelamorim811@gmail.com>
+Date:   Mon Nov 13 20:14:04 2023 -0300
+
+    teste do metodo findBySkinId
+
+[33mcommit bf4a4b69803fcb929027bd3ae1c42b4d619506f0[m
+Author: LucasSimoesSilva <lucassimoes.carvalho@gmail.com>
+Date:   Mon Nov 13 19:45:11 2023 -0300
+
+    Adicionando teste positivo para metodo get do controller de skins
+
+[33mcommit b757df5ecbf06cc97183c782206f64afeeda223b[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mstatus[m[33m)[m
+Author: LucasSimoesSilva <lucassimoes.carvalho@gmail.com>
+Date:   Sun Nov 12 21:06:30 2023 -0300
+
+    Adicionando setup de testes com o banco de dados h2
+
+[33mcommit f17f41cd68b4d73d29b4f0afff0baa117c68ea7a[m
+Author: LucasSimoesSilva <lucassimoes.carvalho@gmail.com>
+Date:   Sun Nov 12 19:16:50 2023 -0300
+
+    Adicionando primeiros testes
+
+[33mcommit 685391976a393858fa826e631d2194b699a45069[m
+Author: LucasSimoesSilva <lucassimoes.carvalho@gmail.com>
+Date:   Fri Nov 10 18:10:11 2023 -0300
+
+    Criando classes de teste
+
+[33mcommit 83742a9001a56ee9ea273f28518aced7087d5f06[m
+Author: LucasSimoesSilva <lucassimoes.carvalho@gmail.com>
+Date:   Fri Nov 10 18:03:25 2023 -0300
+
+    Adicionando pastas de teste
+
+[33mcommit b1b3ca98ab50904dc17b2107e9ffc8bccc888954[m
+Author: LucasSimoesSilva <lucassimoes.carvalho@gmail.com>
+Date:   Fri Nov 10 18:00:34 2023 -0300
+
+    Arrumando detalhes
+
+[33mcommit 4c10d737324ad7c6b370d20966c6d8a31bb8ab78[m[33m ([m[1;32mmain[m[33m)[m
+Author: LucasSimoesSilva <lucassimoes.carvalho@gmail.com>
+Date:   Wed Nov 8 21:07:25 2023 -0300
+
+    Adicionando versao funcional
+
+[33mcommit b6f6013d47981aa5979047aa74e526765cee9110[m
+Author: LucasSimoesSilva <lucassimoes.carvalho@gmail.com>
+Date:   Wed Nov 8 19:47:00 2023 -0300
+
+    Resolving issues again
+
+[33mcommit ec4aaa82c57c332c17ae2cfa4822eaad59a37b50[m
+Author: LucasSimoesSilva <lucassimoes.carvalho@gmail.com>
+Date:   Wed Nov 8 19:45:52 2023 -0300
+
+    Resolving issues
+
+[33mcommit 888d547c6101aa9edfb3d19db630ba739796fee0[m
+Author: LucasSimoesSilva <lucassimoes.carvalho@gmail.com>
+Date:   Mon Nov 6 18:51:52 2023 -0300
+
+    Adding basic project

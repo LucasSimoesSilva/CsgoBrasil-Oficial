@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -21,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -90,6 +92,32 @@ public class SkinControllerTest {
         assertEquals(messageInvalidId, response.getContentAsString());
         assertEquals(response.getStatus(), HttpStatus.BAD_REQUEST.value());
     }
+
+    @Test
+    public void postSaveSkinValid() throws Exception {
+        Skin skin = new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", "");
+        when(service.addSkin(skin)).thenReturn(skin);
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        post("/skin")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(skinJson.write(
+                                        skin
+                                ).getJson())
+                )
+                .andReturn().getResponse();
+
+        Skin skinResponse = skinJson.parse(response.getContentAsString()).getObject();
+
+        assertEquals(response.getStatus(), HttpStatus.CREATED.value());
+        assertEquals(skin.getNome(), skinResponse.getNome());
+        assertEquals(skinResponse.getPreco(), skin.getPreco());
+        assertEquals(skinResponse.getRaridade(), skin.getRaridade());
+        assertNotNull(skinResponse);
+
+    }
+
 
     private static List<Skin> getSkins() {
         List<Skin> skins = new ArrayList<>();
