@@ -30,7 +30,7 @@ public class SkinService {
     }
 
     public Skin findBySkinId(Long id) {
-        return repository.findById(id).orElse(new Skin());
+        return repository.findById(id).get();
     }
 
     public List<SkinMovement> getSkinMovements(List<Movement> movements){

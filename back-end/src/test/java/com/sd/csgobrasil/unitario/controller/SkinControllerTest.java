@@ -1,6 +1,5 @@
 package com.sd.csgobrasil.unitario.controller;
 
-import com.sd.csgobrasil.controllers.SkinController;
 import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.service.SkinService;
 import org.junit.jupiter.api.Test;
@@ -11,12 +10,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,13 +60,14 @@ public class SkinControllerTest {
     }
 
     @Test
-    public void getControlerReturnSkinByID() throws Exception {
+    public void getControllerReturnSkinByID() throws Exception {
+        Long id = 1L;
 
-        Skin skin = new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", "");
+        Skin skin = new Skin(id, "Dragon Lore", "AWP", 100, "Nova de Guerra", "");
 
-        when(service.findBySkinId(1L)).thenReturn(skin);
+        when(service.findBySkinId(id)).thenReturn(skin);
         MockHttpServletResponse response = mvc.
-                perform(get("/skin/{id}", "1")).andReturn().getResponse();
+                perform(get("/skin/{id}", id)).andReturn().getResponse();
         Skin skinResponse = skinJson.parse(response.getContentAsString()).getObject();
 
 
@@ -76,6 +76,19 @@ public class SkinControllerTest {
         assertEquals(skinResponse.getRaridade(), skin.getRaridade());
         assertEquals(response.getStatus(), HttpStatus.OK.value());
         assertNotNull(skinResponse);
+    }
+
+    @Test
+    public void getControllerReturnBadRequestWhenIdIsNotValid() throws Exception {
+        when(service.findBySkinId(0L)).thenThrow(new NoSuchElementException());
+
+        MockHttpServletResponse response = mvc.
+                perform(get("/skin/{id}", "0")).andReturn().getResponse();
+
+        String messageInvalidId = "Invalid Id";
+
+        assertEquals(messageInvalidId, response.getContentAsString());
+        assertEquals(response.getStatus(), HttpStatus.BAD_REQUEST.value());
     }
 
     private static List<Skin> getSkins() {
