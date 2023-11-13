@@ -19,10 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -37,6 +36,8 @@ public class SkinControllerTest {
 
     @Autowired
     private JacksonTester<List<Skin>> skinListJson;
+    @Autowired
+    private JacksonTester<Skin> skinJson;
 
     @Test
     public void getControllerReturnSkins() throws Exception {
@@ -52,18 +53,38 @@ public class SkinControllerTest {
         List<Skin> responseObject = skinListJson.parse(response.getContentAsString()).getObject();
 
         assertThat(responseObject).isNotEmpty();
-        assertEquals(responseObject.get(0).getNome(),skin.getNome());
-        assertEquals(responseObject.get(0).getPreco(),skin.getPreco());
-        assertEquals(responseObject.get(0).getRaridade(),skin.getRaridade());
+        assertEquals(responseObject.get(0).getNome(), skin.getNome());
+        assertEquals(responseObject.get(0).getPreco(), skin.getPreco());
+        assertEquals(responseObject.get(0).getRaridade(), skin.getRaridade());
         assertEquals(response.getStatus(), HttpStatus.OK.value());
 
     }
 
+    @Test
+    public void getControlerReturnSkinByID() throws Exception {
+
+        Skin skin = new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", "");
+
+        when(service.findBySkinId(1L)).thenReturn(skin);
+        MockHttpServletResponse response = mvc.
+                perform(get("/skin/{id}", "1")).andReturn().getResponse();
+        Skin skinResponse = skinJson.parse(response.getContentAsString()).getObject();
+
+
+        assertEquals(skinResponse.getNome(), skin.getNome());
+        assertEquals(skinResponse.getPreco(), skin.getPreco());
+        assertEquals(skinResponse.getRaridade(), skin.getRaridade());
+        assertEquals(response.getStatus(), HttpStatus.OK.value());
+        assertNotNull(skinResponse);
+    }
+
     private static List<Skin> getSkins() {
         List<Skin> skins = new ArrayList<>();
-        skins.add(new Skin(1L,"Dragon Lore","AWP",100,"Nova de Guerra",""));
-        skins.add(new Skin(2L,"Dragon Red","Pistol",100,"Velha de Guerra",""));
-        skins.add(new Skin(3L,"Dragon Blue","AWP",100,"Veterana",""));
+        skins.add(new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", ""));
+        skins.add(new Skin(2L, "Dragon Red", "Pistol", 100, "Velha de Guerra", ""));
+        skins.add(new Skin(3L, "Dragon Blue", "AWP", 100, "Veterana", ""));
         return skins;
     }
+
+
 }
