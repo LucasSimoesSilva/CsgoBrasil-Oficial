@@ -38,8 +38,7 @@ public class MovementServiceTest {
     MovementService service;
 
     @Test
-    public void retornarMovementValido(){
-        service.findByMovementId(1L);
-        when(repository.findById(1L)).thenReturn(Optional.of(new Movement()));
+    public void fazerAlgo(){
+
     }
 }

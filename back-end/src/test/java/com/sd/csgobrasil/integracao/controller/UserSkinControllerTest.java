@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest
-public class SkinControllerTest {
+public class UserSkinControllerTest {
 
     @Autowired
     private MockMvc mvc;
