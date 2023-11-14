@@ -2,6 +2,7 @@ package com.sd.csgobrasil.unitario.controller;
 
 import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.service.SkinService;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
@@ -15,14 +16,16 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -54,10 +57,11 @@ public class SkinControllerTest {
         List<Skin> responseObject = skinListJson.parse(response.getContentAsString()).getObject();
 
         assertThat(responseObject).isNotEmpty();
-        assertEquals(responseObject.get(0).getNome(), skin.getNome());
-        assertEquals(responseObject.get(0).getPreco(), skin.getPreco());
-        assertEquals(responseObject.get(0).getRaridade(), skin.getRaridade());
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
+        assertEquals(skin.getNome(), responseObject.get(0).getNome());
+        assertEquals(skin.getPreco(), responseObject.get(0).getPreco());
+        assertEquals(skin.getRaridade(), responseObject.get(0).getRaridade());
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertTrue(responseObject.size() > 1);
 
     }
 
@@ -73,10 +77,10 @@ public class SkinControllerTest {
         Skin skinResponse = skinJson.parse(response.getContentAsString()).getObject();
 
 
-        assertEquals(skinResponse.getNome(), skin.getNome());
-        assertEquals(skinResponse.getPreco(), skin.getPreco());
-        assertEquals(skinResponse.getRaridade(), skin.getRaridade());
-        assertEquals(response.getStatus(), HttpStatus.OK.value());
+        assertEquals(skin.getNome(), skinResponse.getNome());
+        assertEquals(skin.getPreco(), skinResponse.getPreco());
+        assertEquals(skin.getRaridade(), skinResponse.getRaridade());
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertNotNull(skinResponse);
     }
 
@@ -90,33 +94,55 @@ public class SkinControllerTest {
         String messageInvalidId = "Invalid Id";
 
         assertEquals(messageInvalidId, response.getContentAsString());
-        assertEquals(response.getStatus(), HttpStatus.BAD_REQUEST.value());
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
     }
 
     @Test
     public void postSaveSkinValid() throws Exception {
         Skin skin = new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", "");
-        when(service.addSkin(skin)).thenReturn(skin);
+
+        when(service.addSkin(any(Skin.class))).thenReturn(skin);
 
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/skin")
                                 .contentType(MediaType.APPLICATION_JSON)
-                                .content(skinJson.write(
-                                        skin
-                                ).getJson())
+                                .content(skinJson.write(skin).getJson())
                 )
                 .andReturn().getResponse();
 
         Skin skinResponse = skinJson.parse(response.getContentAsString()).getObject();
 
-        assertEquals(response.getStatus(), HttpStatus.CREATED.value());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
         assertEquals(skin.getNome(), skinResponse.getNome());
-        assertEquals(skinResponse.getPreco(), skin.getPreco());
-        assertEquals(skinResponse.getRaridade(), skin.getRaridade());
+        assertEquals(skin.getPreco(),skinResponse.getPreco());
+        assertEquals(skin.getRaridade(), skinResponse.getRaridade());
         assertNotNull(skinResponse);
 
     }
+
+    @Test
+    public void postDoNotSaveInvalidSkin() throws Exception {
+        Skin skin = new Skin(1L, null, "AWP", 100, "Nova de Guerra", "");
+
+        when(service.addSkin(any(Skin.class))).thenThrow(new ConstraintViolationException(new HashSet<>()));
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        post("/skin")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(skinJson.write(skin).getJson())
+                )
+                .andReturn().getResponse();
+
+        String responseMessage = response.getContentAsString();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals("Blank field in the request", responseMessage);
+    }
+
+
+
 
 
     private static List<Skin> getSkins() {
