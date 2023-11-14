@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @SpringBootTest
@@ -183,6 +183,40 @@ public class SkinControllerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertEquals("Blank field in the request", responseMessage);
+    }
+
+    @Test
+    public void deleteValidId() throws Exception {
+        doNothing().when(service).deleteSkin(1L);
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        delete("/skin/{id}",1L)
+                )
+                .andReturn().getResponse();
+
+        verify(service, times(1)).deleteSkin(1L);
+
+        String responseMessage = response.getContentAsString();
+
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+        assertEquals("", responseMessage);
+    }
+
+    @Test
+    public void deleteInvalidId() throws Exception {
+        doThrow(new NoSuchElementException()).when(service).deleteSkin(0L);
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        delete("/skin/{id}",0L)
+                )
+                .andReturn().getResponse();
+
+        String messageInvalidId = "Invalid Id";
+
+        assertEquals(messageInvalidId, response.getContentAsString());
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
     }
 
 

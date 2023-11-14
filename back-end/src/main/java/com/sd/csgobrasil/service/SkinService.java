@@ -9,6 +9,7 @@ import com.sd.csgobrasil.repository.SkinRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class SkinService {
@@ -48,6 +49,11 @@ public class SkinService {
     }
 
     public void deleteSkin(Long id){
-        repository.deleteById(id);
+        boolean exists = repository.existsById(id);
+        if(exists){
+            repository.deleteById(id);
+        }else {
+            throw new NoSuchElementException();
+        }
     }
 }

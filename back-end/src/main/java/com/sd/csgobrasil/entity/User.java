@@ -2,6 +2,7 @@ package com.sd.csgobrasil.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,11 +18,16 @@ public class User{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(unique = true)
+    @NotNull
     private String nome;
+    @NotNull
     private String cargo;
+    @NotNull
     private int pontos;
     @Column(unique = true)
+    @NotNull
     private String email;
+    @NotNull
     private String senha;
 
     @OneToMany

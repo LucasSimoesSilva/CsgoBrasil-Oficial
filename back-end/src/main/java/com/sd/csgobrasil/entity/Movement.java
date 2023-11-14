@@ -1,6 +1,7 @@
 package com.sd.csgobrasil.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,14 +14,18 @@ public class Movement{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idVenda;
+    @NotNull
     private Long idVendedor;
+    @NotNull
     private Long idComprador;
-
+    @NotNull
     private Long idSkin;
 
     // O estadoVenda quando false indica que a Skin foi anunciada, mas não comprada
     // Quando for true, os pontos serão enviados para o vendedor
+    @NotNull
     private boolean estadoVenda;
+    @NotNull
     private int pontos;
 
 
