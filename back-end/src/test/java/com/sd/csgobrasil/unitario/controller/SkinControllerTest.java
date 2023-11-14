@@ -142,6 +142,49 @@ public class SkinControllerTest {
     }
 
 
+    @Test
+    public void putUpdateValidObject() throws Exception {
+        Skin skin = new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", "");
+
+        when(service.updateSkin(eq(1L),any(Skin.class))).thenReturn(skin);
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        put("/skin/{id}",1L)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(skinJson.write(skin).getJson())
+                )
+                .andReturn().getResponse();
+
+        Skin skinResponse = skinJson.parse(response.getContentAsString()).getObject();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(skin.getNome(), skinResponse.getNome());
+        assertEquals(skin.getPreco(),skinResponse.getPreco());
+        assertEquals(skin.getRaridade(), skinResponse.getRaridade());
+        assertNotNull(skinResponse);
+    }
+
+    @Test
+    public void putUpdateInvalidObject() throws Exception {
+        Skin skin = new Skin(1L, null, "AWP", 100, "Nova de Guerra", "");
+
+        when(service.updateSkin(eq(1L),any(Skin.class))).thenThrow(new ConstraintViolationException(new HashSet<>()));
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        put("/skin/{id}",1L)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(skinJson.write(skin).getJson())
+                )
+                .andReturn().getResponse();
+
+        String responseMessage = response.getContentAsString();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals("Blank field in the request", responseMessage);
+    }
+
 
 
 
