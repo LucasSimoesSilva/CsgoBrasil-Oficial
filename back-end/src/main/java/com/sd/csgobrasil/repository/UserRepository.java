@@ -14,10 +14,13 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    boolean existsUserByEmailOrNome(String email, String nome);
+    @Query(value = "SELECT COUNT(*) > 0 AS exists_entity FROM `user` as u WHERE u.email = ? OR u.nome = ?",nativeQuery = true)
+    Boolean existsUserByEmailOrNome(String email, String nome);
 
-    boolean existsUserByEmailAndSenha(String email, String senha);
+    @Query(value = "SELECT COUNT(*) > 0 AS exists_entity FROM `user` as u WHERE u.email = ? AND u.senha = ?",nativeQuery = true)
+    Boolean existsUserByEmailAndSenha(String email, String senha);
 
+    @Query(value = "SELECT *  FROM `user` as u WHERE u.email = ?",nativeQuery = true)
     User findUsersByEmail(String email);
 
     @Query(value = "SELECT skins_user_id as idSkin, user_id as idUser FROM user_skins_user WHERE user_id=?",nativeQuery = true)
