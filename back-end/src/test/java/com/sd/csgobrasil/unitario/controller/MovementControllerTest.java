@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -155,6 +156,36 @@ public class MovementControllerTest {
 
         assertThat(response.getContentAsString()).isEmpty();
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("method findByMovementId")
+    void returnMovementWhenIdIsValid() throws Exception {
+        Movement movement = new Movement(1L, 1L, 2L, 3L, true, 123);
+        when(service.findByMovementId(1L)).thenReturn(movement);
+
+        MockHttpServletResponse response = mvc.
+                perform(get("/movement/{idVenda}",1L)).andReturn().getResponse();
+
+        Movement responseObject = movementJson.parse(response.getContentAsString()).getObject();
+
+        assertThat(responseObject).isNotNull();
+        assertEquals(movement,responseObject);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    @DisplayName("method findByMovementId")
+    void returnNullWhenIdIsInvalid() throws Exception {
+        when(service.findByMovementId(-1L)).thenThrow(new NoSuchElementException());
+
+        MockHttpServletResponse response = mvc.
+                perform(get("/movement/{idVenda}",-1L)).andReturn().getResponse();
+
+        String messageInvalidId = "Invalid Id";
+
+        assertEquals(messageInvalidId, response.getContentAsString());
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
     }
 
 

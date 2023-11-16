@@ -36,7 +36,7 @@ public class MovementService {
 
     public Movement addMovement(Movement m){return repository.save(m);}
 
-    public Movement findByMovementId(Long id){return repository.findById(id).orElse(new Movement());}
+    public Movement findByMovementId(Long id){return repository.findById(id).get();}
 
     public boolean makeMovement(Long idVenda, Long idComprador){
         Movement movement = findByMovementId(idVenda);
