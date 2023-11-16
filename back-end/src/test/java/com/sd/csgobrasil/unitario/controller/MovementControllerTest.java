@@ -50,7 +50,7 @@ public class MovementControllerTest {
 
     @Test
     void getAllMovementsWhenHaveMovements() throws Exception {
-        List<Movement> movementList = getMovementList();
+        List<Movement> movementList = getMovements();
 
         when(service.listMovement()).thenReturn(movementList);
 
@@ -82,18 +82,11 @@ public class MovementControllerTest {
     @Test
     @DisplayName("method listMovementSkin")
     void getASkinMovementList() throws Exception {
-        List<Movement> movements = new ArrayList<>();
-        Movement movement = new Movement(1L, 1L, 2L, 3L, true, 123);
-        Movement movement1 = new Movement(2L, 1L, 2L, 4L, true, 234);
-        movements.add(movement);
-        movements.add(movement1);
+        List<Movement> movements = getMovements();
         when(service.listMovement()).thenReturn(movements);
 
-        List<SkinMovement> skinMovements = new ArrayList<>();
-        skinMovements.add(new SkinMovement(1L, 1L , true, "dragon",
-                "AWP", 10, "guerra", ""));
-        skinMovements.add(new SkinMovement(2L, 1L , true, "eagle",
-                "Pistola", 10, "guerra", ""));
+        List<SkinMovement> skinMovements = getSkinMovementList();
+
         when(skinService.getSkinMovements(movements)).thenReturn(skinMovements);
 
         MockHttpServletResponse response = mvc.
@@ -106,6 +99,8 @@ public class MovementControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertTrue(responseObject.size() > 1);
     }
+
+
     @Test
     @DisplayName("method listMovementSkin")
     void getAEmptySkinMovementList() throws Exception {
@@ -124,7 +119,7 @@ public class MovementControllerTest {
     @Test
     @DisplayName("method addMovement")
     void addValidMovement() throws Exception {
-        Movement movement = new Movement(1L, 1L, 2L, 3L, true, 123);
+        Movement movement = createMovement();
 
         when(service.addMovement(movement)).thenReturn(movement);
 
@@ -161,7 +156,7 @@ public class MovementControllerTest {
     @Test
     @DisplayName("method findByMovementId")
     void returnMovementWhenIdIsValid() throws Exception {
-        Movement movement = new Movement(1L, 1L, 2L, 3L, true, 123);
+        Movement movement = createMovement();
         when(service.findByMovementId(1L)).thenReturn(movement);
 
         MockHttpServletResponse response = mvc.
@@ -189,11 +184,23 @@ public class MovementControllerTest {
     }
 
 
+    private List<Movement> getMovements() {
+        List<Movement> movements = new ArrayList<>();
+        movements.add(new Movement(1L, 1L, 2L, 3L, true, 123));
+        movements.add(new Movement(2L, 1L, 2L, 4L, true, 234));
+        return movements;
+    }
 
-    private static List<Movement> getMovementList() {
-        List<Movement> movementList = new ArrayList<>();
-        movementList.add(new Movement(1L, 2L, 3L, 1L, true, 100));
-        movementList.add(new Movement(2L, 3L, 4L, 10L, true, 200));
-        return movementList;
+    private List<SkinMovement> getSkinMovementList() {
+        List<SkinMovement> skinMovements = new ArrayList<>();
+        skinMovements.add(new SkinMovement(1L, 1L , true, "dragon",
+                "AWP", 10, "guerra", ""));
+        skinMovements.add(new SkinMovement(2L, 1L , true, "eagle",
+                "Pistola", 10, "guerra", ""));
+        return skinMovements;
+    }
+
+    private Movement createMovement() {
+        return new Movement(1L, 1L, 2L, 3L, true, 123);
     }
 }
