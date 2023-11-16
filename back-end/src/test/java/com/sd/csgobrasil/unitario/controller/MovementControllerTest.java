@@ -1,5 +1,6 @@
 package com.sd.csgobrasil.unitario.controller;
 
+import com.sd.csgobrasil.entity.DTO.SkinMovement;
 import com.sd.csgobrasil.entity.Movement;
 import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.service.MovementService;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -41,6 +43,9 @@ public class MovementControllerTest {
     private JacksonTester<List<Movement>> movementListJson;
     @Autowired
     private JacksonTester<Movement> movementJson;
+    @Autowired
+    private JacksonTester<List<SkinMovement>> skinMovementListJson;
+
 
     @Test
     void getAllMovementsWhenHaveMovements() throws Exception {
@@ -60,7 +65,7 @@ public class MovementControllerTest {
     }
 
     @Test
-    void getEmptyListWhenHaveNotMovements() throws Exception {
+    void getEmptyListWhenHaveNotMovements_listMovement() throws Exception {
         when(service.listMovement()).thenReturn(new ArrayList<>());
 
         MockHttpServletResponse response = mvc.
@@ -71,6 +76,48 @@ public class MovementControllerTest {
         assertThat(responseObject).isEmpty();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
+
+    @Test
+    void getASkinMovementlist_listMovementSkin() throws Exception {
+        List<Movement> movements = new ArrayList<>();
+        Movement movement = new Movement(1L, 1L, 2L, 3L, true, 123);
+        Movement movement1 = new Movement(2L, 1L, 2L, 4L, true, 234);
+        movements.add(movement);
+        movements.add(movement1);
+        when(service.listMovement()).thenReturn(movements);
+
+        List<SkinMovement> skinMovements = new ArrayList<>();
+        skinMovements.add(new SkinMovement(1L, 1L , true, "dragon",
+                "AWP", 10, "guerra", ""));
+        when(skinService.getSkinMovements(movements)).thenReturn(skinMovements);
+
+        MockHttpServletResponse response = mvc.
+                perform(get("/movement/skinMovements")).andReturn().getResponse();
+
+        List<SkinMovement> responseObject = skinMovementListJson.parse(response.getContentAsString()).getObject();
+
+        assertThat(responseObject).isNotEmpty();
+        assertIterableEquals(skinMovements,responseObject);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertTrue(responseObject.size() >= 1);
+    }
+    @Test
+    void getAEmptySkinMovementlist_listMovementSkin() throws Exception {
+        when(service.listMovement()).thenReturn(new ArrayList<>());
+        when(skinService.getSkinMovements(new ArrayList<>()).thenReturn(new ArrayList<>()));
+
+        MockHttpServletResponse response = mvc.
+                perform(get("/movement/skinMovements")).andReturn().getResponse();
+
+        List<SkinMovement> responseObject = skinMovementListJson.parse(response.getContentAsString()).getObject();
+
+        assertThat(responseObject).isNotEmpty();
+        assertIterableEquals(skinMovements,responseObject);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertTrue(responseObject.size() >= 1);
+    }
+
+
 
     private static List<Movement> getMovementList() {
         List<Movement> movementList = new ArrayList<>();
