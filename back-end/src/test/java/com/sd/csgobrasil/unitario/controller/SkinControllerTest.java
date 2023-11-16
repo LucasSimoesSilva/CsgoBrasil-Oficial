@@ -62,7 +62,6 @@ public class SkinControllerTest {
         assertEquals(skin.getRaridade(), responseObject.get(0).getRaridade());
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertTrue(responseObject.size() > 1);
-
     }
 
     @Test

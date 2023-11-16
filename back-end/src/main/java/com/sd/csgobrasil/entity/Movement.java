@@ -2,6 +2,7 @@ package com.sd.csgobrasil.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@EqualsAndHashCode(of = {"idVenda"})
 public class Movement{
 
     @Id
