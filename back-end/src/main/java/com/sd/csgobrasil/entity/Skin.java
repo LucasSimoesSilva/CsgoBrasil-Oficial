@@ -4,6 +4,7 @@ package com.sd.csgobrasil.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,6 +12,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"id","nome"})
 public class Skin{
 
     @Id

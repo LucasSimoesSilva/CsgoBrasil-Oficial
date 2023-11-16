@@ -66,6 +66,16 @@ public class SkinControllerTest {
     }
 
     @Test
+    public void getControllerReturnEmptySkinIfDoNotHaveSkin() throws Exception {
+        when(service.listSkins()).thenReturn(new ArrayList<>());
+
+        MockHttpServletResponse response = mvc.
+                perform(get("/skin/skins")).andReturn().getResponse();
+
+        assertThat(response.getContentAsString()).isEqualTo("[]");
+    }
+
+    @Test
     public void getControllerReturnSkinByID() throws Exception {
         Long id = 1L;
 
