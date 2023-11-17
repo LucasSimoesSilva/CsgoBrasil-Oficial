@@ -25,8 +25,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -52,7 +51,7 @@ public class UserControllerTest {
         when(service.listUsers()).thenReturn(getUsers());
 
         MockHttpServletResponse response = mvc.
-                perform(get("/user/users`")).andReturn().getResponse();
+                perform(get("/user/users")).andReturn().getResponse();
 
         List<User> responseObject = userListJson.parse(response.getContentAsString()).getObject();
 
@@ -85,8 +84,14 @@ public class UserControllerTest {
         User user = new User(1L, "Mauricio", "1234", "email@email.com", 11,getSkins(), "cargo");
 
         when(service.getUserInfo(user.getEmail())).thenReturn(user);
-        MockHttpServletResponse response = mvc.
-                perform(get("/user/info")).andReturn().getResponse();
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        put("/user/info")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(userJson.write(user).getJson())
+                )
+                .andReturn().getResponse();
 
         User responseObject = userJson.parse(response.getContentAsString()).getObject();
 
