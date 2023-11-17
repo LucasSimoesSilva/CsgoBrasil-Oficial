@@ -1,11 +1,8 @@
 package com.sd.csgobrasil.unitario.controller;
 
-import com.sd.csgobrasil.entity.DTO.UserLogin;
-import com.sd.csgobrasil.entity.Movement;
 import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.entity.User;
 import com.sd.csgobrasil.service.UserService;
-import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.HashSet;
-import java.util.NoSuchElementException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +23,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -47,6 +40,7 @@ public class UserControllerTest {
 
     @Autowired
     private JacksonTester<List<User>> userListJson;
+
     @Autowired
     private JacksonTester<User> userJson;
 
@@ -89,24 +83,21 @@ public class UserControllerTest {
 
         User user = new User(1L, "Mauricio", "1234", "email@email.com", 11, getSkins(), "cargo");
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String userJsonString = objectMapper.writeValueAsString(user);
-
         when(service.getUserInfo("email@email.com")).thenReturn(user);
 
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/user/info")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(userJsonString)
+                                .contentType(MediaType.TEXT_PLAIN)
+                                .content(user.getEmail())
                 )
                 .andReturn().getResponse();
 
-        User responseObject = objectMapper.readValue(response.getContentAsString(), User.class);
+        User responseObject = userJson.parse(response.getContentAsString()).getObject();
 
         assertThat(responseObject).isNotNull();
         assertEquals(user, responseObject);
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
     // negative
