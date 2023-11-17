@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -119,16 +120,15 @@ public class UserControllerTest {
     @DisplayName("method findByUserId")
     @Test
     void getEmptyUserById() throws Exception {
-        User user = new User();
-
-        when(service.findByUserId(-1L)).thenReturn(user);
+        when(service.findByUserId(-1L)).thenThrow(new NoSuchElementException());
 
         MockHttpServletResponse response = mvc.
                 perform(get("/user/{id}", -1L)).andReturn().getResponse();
 
-        User responseObject = userJson.parse(response.getContentAsString()).getObject();
-        assertEquals(user.toString(), responseObject.toString());
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        String messageInvalidId = "Invalid Id";
+
+        assertEquals(messageInvalidId, response.getContentAsString());
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
 
     }
     @Test

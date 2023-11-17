@@ -51,7 +51,7 @@ public class UserService {
         user.setId(id);
         return repository.save(user);}
 
-    public User findByUserId(Long id){return repository.findById(id).orElse(new User());}
+    public User findByUserId(Long id){return repository.findById(id).get();}
 
     public void deleteUser(Long id){repository.deleteById(id);}
 
