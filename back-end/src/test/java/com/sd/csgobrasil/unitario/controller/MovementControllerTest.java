@@ -56,7 +56,6 @@ public class MovementControllerTest {
     private JacksonTester<List<ReportImpl>> reportJson;
 
     @Test
-
     void getEmptyListWhenHaveNotMovements() throws Exception {
         when(service.listMovement()).thenReturn(new ArrayList<>());
 
