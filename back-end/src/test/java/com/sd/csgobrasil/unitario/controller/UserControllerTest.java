@@ -118,7 +118,22 @@ public class UserControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
-    // negative
+    @DisplayName("method getUserInfo")
+    @Test
+    void shouldReturnBlankResponse() throws Exception {
+        when(service.getUserInfo("email@email.com")).thenReturn(null);
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        post("/user/info")
+                                .contentType(MediaType.TEXT_PLAIN)
+                                .content("email@email.com")
+                )
+                .andExpect(content().string(""))
+                .andReturn().getResponse();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
 
     @DisplayName("method findByUserId")
     @Test

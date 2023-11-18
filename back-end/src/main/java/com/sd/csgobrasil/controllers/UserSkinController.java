@@ -19,7 +19,7 @@ public class UserSkinController {
     UserSkinService service;
 
     @GetMapping("/skinsState/{idUser}")
-    public ResponseEntity<?> listSkinsWithState(@PathVariable Long idUser){
+    public ResponseEntity<List<SkinWithState>> listSkinsWithState(@PathVariable Long idUser){
         List<SkinWithState> skinsUser = service.listSkinsWithStateFromUser(idUser);
         return ResponseEntity.status(HttpStatus.OK).body(skinsUser);
     }
