@@ -3,6 +3,7 @@ package com.sd.csgobrasil.unitario.controller;
 import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.service.SkinService;
 import jakarta.validation.ConstraintViolationException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
@@ -43,6 +44,7 @@ public class SkinControllerTest {
     @Autowired
     private JacksonTester<Skin> skinJson;
 
+    @DisplayName("method listSkins")
     @Test
     public void getControllerReturnSkins() throws Exception {
         Skin skin = new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", "");
@@ -64,6 +66,7 @@ public class SkinControllerTest {
         assertTrue(responseObject.size() > 1);
     }
 
+    @DisplayName("method listSkins")
     @Test
     public void getControllerReturnEmptySkinIfDoNotHaveSkin() throws Exception {
         when(service.listSkins()).thenReturn(new ArrayList<>());
@@ -73,7 +76,7 @@ public class SkinControllerTest {
 
         assertThat(response.getContentAsString()).isEqualTo("[]");
     }
-
+    @DisplayName("method findBySkinId")
     @Test
     public void getControllerReturnSkinByID() throws Exception {
         Long id = 1L;
@@ -92,7 +95,7 @@ public class SkinControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertNotNull(skinResponse);
     }
-
+    @DisplayName("method findBySkinId")
     @Test
     public void getControllerReturnBadRequestWhenIdIsNotValid() throws Exception {
         when(service.findBySkinId(0L)).thenThrow(new NoSuchElementException());
@@ -105,7 +108,7 @@ public class SkinControllerTest {
         assertEquals(messageInvalidId, response.getContentAsString());
         assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
     }
-
+    @DisplayName("method saveSkin")
     @Test
     public void postSaveSkinValid() throws Exception {
         Skin skin = new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", "");
@@ -129,7 +132,7 @@ public class SkinControllerTest {
         assertNotNull(skinResponse);
 
     }
-
+    @DisplayName("method saveSkin")
     @Test
     public void postDoNotSaveInvalidSkin() throws Exception {
         Skin skin = new Skin(1L, null, "AWP", 100, "Nova de Guerra", "");
@@ -150,7 +153,7 @@ public class SkinControllerTest {
         assertEquals("Blank field in the request", responseMessage);
     }
 
-
+    @DisplayName("method updateSkin")
     @Test
     public void putUpdateValidObject() throws Exception {
         Skin skin = new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", "");
@@ -173,7 +176,7 @@ public class SkinControllerTest {
         assertEquals(skin.getRaridade(), skinResponse.getRaridade());
         assertNotNull(skinResponse);
     }
-
+    @DisplayName("method updateSkin")
     @Test
     public void putUpdateInvalidObject() throws Exception {
         Skin skin = new Skin(1L, null, "AWP", 100, "Nova de Guerra", "");
@@ -193,7 +196,7 @@ public class SkinControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertEquals("Blank field in the request", responseMessage);
     }
-
+    @DisplayName("method deleteSkin")
     @Test
     public void deleteValidId() throws Exception {
         doNothing().when(service).deleteSkin(1L);
@@ -211,7 +214,7 @@ public class SkinControllerTest {
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
         assertEquals("", responseMessage);
     }
-
+    @DisplayName("method deleteSkin")
     @Test
     public void deleteInvalidId() throws Exception {
         doThrow(new NoSuchElementException()).when(service).deleteSkin(0L);
