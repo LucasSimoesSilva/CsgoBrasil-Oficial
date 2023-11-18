@@ -29,6 +29,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
@@ -98,6 +99,21 @@ public class UserControllerTest {
 
         assertThat(responseObject).isNotNull();
         assertEquals(user, responseObject);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @DisplayName("method getUserInfo")
+    @Test
+    void shouldReturnBlankResponse() throws Exception {
+        MockHttpServletResponse response = mvc
+                .perform(
+                        post("/user/info")
+                                .contentType(MediaType.TEXT_PLAIN)
+                                .content("email@email.com")
+                )
+                .andExpect(content().string(""))
+                .andReturn().getResponse();
+
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
