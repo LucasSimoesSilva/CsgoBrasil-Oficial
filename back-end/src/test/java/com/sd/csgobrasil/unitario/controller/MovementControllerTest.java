@@ -6,7 +6,7 @@ import com.sd.csgobrasil.entity.DTO.SkinMovement;
 import com.sd.csgobrasil.entity.Movement;
 import com.sd.csgobrasil.service.MovementService;
 import com.sd.csgobrasil.service.SkinService;
-import lombok.EqualsAndHashCode;
+import com.sd.csgobrasil.util.ReportImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,8 +55,11 @@ public class MovementControllerTest {
     @Autowired
     private JacksonTester<List<ReportImpl>> reportJson;
 
-    @Test
+    @Autowired
+    private JacksonTester<List<SkinMovement>> skinMovementListJson;
 
+    @Test
+    @DisplayName("method listMovement")
     void getEmptyListWhenHaveNotMovements() throws Exception {
         when(service.listMovement()).thenReturn(new ArrayList<>());
 
@@ -68,9 +71,6 @@ public class MovementControllerTest {
         assertThat(responseObject).isEmpty();
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-
-    @Autowired
-    private JacksonTester<List<SkinMovement>> skinMovementListJson;
 
     @DisplayName("method listMovement")
     @Test
@@ -91,7 +91,7 @@ public class MovementControllerTest {
     }
 
     @Test
-    @DisplayName("method listMovement")
+    @DisplayName("method listMovementSkin")
     void getASkinMovementList() throws Exception {
         List<Movement> movements = getMovements();
         when(service.listMovement()).thenReturn(movements);
@@ -220,12 +220,12 @@ public class MovementControllerTest {
 
     @Test
     @DisplayName("method makeMovement")
-    void returnAMovementStatusFalse() throws Exception {
+    void returnBadRequestWhenIdIsInvalid() throws Exception {
         Long idVenda = -1L;
         Long idComprador = -2L;
         MovementsId movementsId = new MovementsId(idVenda,idComprador);
 
-        when(service.makeMovement(idVenda,idComprador)).thenReturn(false);
+        when(service.makeMovement(idVenda,idComprador)).thenThrow(new NoSuchElementException());
 
 
         MockHttpServletResponse response = mvc
@@ -236,20 +236,10 @@ public class MovementControllerTest {
                 )
                 .andReturn().getResponse();
 
-        Boolean responseObject = booleanJacksonTester.parse(response.getContentAsString()).getObject();
+        String messageInvalidId = "Invalid Id";
 
-        assertThat(responseObject).isNotNull();
-        assertFalse(responseObject);
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-    }
-
-    private List<SkinMovement> getSkinMovementList() {
-        List<SkinMovement> skinMovements = new ArrayList<>();
-        skinMovements.add(new SkinMovement(1L, 1L , true, "dragon",
-                "AWP", 10, "guerra", ""));
-        skinMovements.add(new SkinMovement(2L, 1L , true, "eagle",
-                "Pistola", 10, "guerra", ""));
-        return skinMovements;
+        assertEquals(messageInvalidId, response.getContentAsString());
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
     }
 
     @DisplayName("method MakeReport")
@@ -271,6 +261,7 @@ public class MovementControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertTrue(responseObject.size() > 1);
     }
+
     @DisplayName("method MakeReport")
     @Test
     void getReportListEmpty() throws Exception {
@@ -287,7 +278,7 @@ public class MovementControllerTest {
         assertIterableEquals(reportList,responseObject);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-    @DisplayName("method MakeReport")
+    @DisplayName("method cancelMovement")
     @Test
     public void deleteValidId() throws Exception {
         doNothing().when(service).cancelMovement(1L);
@@ -307,6 +298,7 @@ public class MovementControllerTest {
         assertEquals("", responseMessage);
     }
 
+    @DisplayName("method cancelMovement")
     @Test
     public void deleteInvalidId() throws Exception {
         doThrow(new NoSuchElementException()).when(service).cancelMovement(0L);
@@ -330,60 +322,19 @@ public class MovementControllerTest {
         movements.add(new Movement(2L, 1L, 2L, 4L, true, 234));
         return movements;
     }
+
     private Movement createMovement() {
         return new Movement(1L, 1L, 2L, 3L, true, 123);
     }
 
+    private List<SkinMovement> getSkinMovementList() {
+        List<SkinMovement> skinMovements = new ArrayList<>();
+        skinMovements.add(new SkinMovement(1L, 1L , true, "dragon",
+                "AWP", 10, "guerra", ""));
+        skinMovements.add(new SkinMovement(2L, 1L , true, "eagle",
+                "Pistola", 10, "guerra", ""));
+        return skinMovements;
+    }
 
 }
 
-@EqualsAndHashCode(of = {"idVenda"})
-class ReportImpl implements Report{
-
-    Long idVenda;
-    String nomeVendedor;
-    String nomeComprador;
-    String nomeSkin;
-    boolean estadoVenda;
-    int pontos;
-
-    public ReportImpl(Long idVenda, String nomeVendedor, String nomeComprador, String nomeSkin,
-                      boolean estadoVenda, int pontos) {
-        this.idVenda = idVenda;
-        this.nomeVendedor = nomeVendedor;
-        this.nomeComprador = nomeComprador;
-        this.nomeSkin = nomeSkin;
-        this.estadoVenda = estadoVenda;
-        this.pontos = pontos;
-    }
-
-    @Override
-    public Long getIdVenda() {
-        return this.idVenda;
-    }
-
-    @Override
-    public String getNomeVendedor() {
-        return this.nomeVendedor;
-    }
-
-    @Override
-    public String getNomeComprador() {
-        return this.nomeComprador;
-    }
-
-    @Override
-    public String getNomeSkin() {
-        return this.nomeSkin;
-    }
-
-    @Override
-    public boolean getEstadoVenda() {
-        return this.estadoVenda;
-    }
-
-    @Override
-    public int getPontos() {
-        return this.pontos;
-    }
-}
