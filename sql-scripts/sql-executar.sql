@@ -3,7 +3,7 @@ use csgo;
 
 /*CRIAÇAO DAS TABELAS*/
 
-CREATE TABLE `user` (
+CREATE TABLE `usuario` (
   `id` bigint NOT NULL AUTO_INCREMENT,
   `cargo` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
@@ -35,13 +35,13 @@ CREATE TABLE `movement` (
   PRIMARY KEY (`id_venda`)
 );
 
-CREATE TABLE user_skins_user (
+CREATE TABLE usuario_skins_user (
   user_id bigint NOT NULL,
   skins_user_id bigint NOT NULL,
   UNIQUE KEY UK_cvw1j99vgmttg3mmmyvwky5e (skins_user_id),
   KEY FKlxfrcbbvremrtl9ld2m73wh1 (user_id),
   CONSTRAINT FKlneol2lrhckkysy0d6rhkyc8v FOREIGN KEY (skins_user_id) REFERENCES skin (id),
-  CONSTRAINT FKlxfrcbbvremrtl9ld2m73wh1 FOREIGN KEY (user_id) REFERENCES user (id)
+  CONSTRAINT FKlxfrcbbvremrtl9ld2m73wh1 FOREIGN KEY (user_id) REFERENCES usuario (id)
 );
 
 
@@ -49,9 +49,9 @@ CREATE TABLE user_skins_user (
 /*INSERTS*/
 
 
-insert into user(nome,cargo,pontos,email,senha) values("Carlos","cliente",200,"ca@gmail","9090"), 
+insert into usuario(nome,cargo,pontos,email,senha) values("Carlos","cliente",200,"ca@gmail","9090"), 
 ("Administrador","admin",100000,"admin@admin.com","admin");
-insert into user(id,nome,cargo,pontos,email,senha) values (3,"EstoqueDinamico","admin",100000,"estoqued@admin.com","admin"),
+insert into usuario(id,nome,cargo,pontos,email,senha) values (3,"EstoqueDinamico","admin",100000,"estoqued@admin.com","admin"),
 (4,"EstoqueEstatico","admin",100000,"estoques@admin.com","admin");
 
 
@@ -93,7 +93,7 @@ insert into skin(nome,arma,preco,raridade,imagem) values
 ("Whiteout", "MP7", 2000,"Well-Worn",'MP7_Whiteout.png');
 
 
-insert into user_skins_user(user_id, skins_user_id) values(1,1), (1,3), 
+insert into usuario_skins_user(user_id, skins_user_id) values(1,1), (1,3), 
 (2,4), (2,5), (2,6), (2,7), (2,8), (2,9), (2,10),
 (3,11), (3,12), (3,13), (3,14), (3,15), (3,16), (3,17), (3,18), (3,19), (3,20),
 (4,21),(4,22),(4,23),(4,24),(4,25),(4,26),(4,27),(4,28),(4,29),(4,30),(4,31),(4,32),(4,33);
@@ -107,7 +107,3 @@ insert into movement(id_vendedor,id_skin, estado_venda, pontos) values (1,3,fals
 (3,16,false,4000), (3,17,false,3000), (3,18,false,2000), (3,19,false,5000), (3,20,false,2000),
 (4,21,false,2000),(4,22,false,3000),(4,23,false,4500),(4,24,false,5000),(4,25,false,8000),
 (4,26,false,5000),(4,27,false,4000),(4,28,false,2000),(4,29,false,6000),(4,30,false,3000),(4,31,false,5000),(4,32,false,1500),(4,33,false,2000);
-
-
-
-
