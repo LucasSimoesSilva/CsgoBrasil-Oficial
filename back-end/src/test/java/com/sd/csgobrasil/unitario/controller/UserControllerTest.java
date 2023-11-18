@@ -62,10 +62,6 @@ public class UserControllerTest {
     @Autowired
     private JacksonTester<UserRegister> userRegisterJson;
 
-    @BeforeEach
-    void setUp() {
-        JacksonTester.initFields(this, new ObjectMapper());
-    }
     @DisplayName("method listUsers")
     @Test
     void shoudReturnAListOfUsers() throws Exception {
@@ -94,7 +90,6 @@ public class UserControllerTest {
                 perform(get("/user/users")).andReturn().getResponse();
 
         List<User> responseObject = userListJson.parse(response.getContentAsString()).getObject();
-        User userInfo = new User();
         assertIterableEquals(users, responseObject);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertThat(users).isEmpty();

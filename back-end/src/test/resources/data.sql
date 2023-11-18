@@ -1,7 +1,7 @@
 INSERT INTO `usuario`(nome, cargo, pontos, email, senha) VALUES ('Carlos', 'cliente', 200, 'ca@gmail', '9090'),
                                                            ('Administrador', 'admin', 100000, 'admin@admin.com', 'admin');
-insert into `usuario`(id, nome, cargo, pontos, email, senha) values (3, 'EstoqueDinamico', 'admin', 100000, 'estoqued@admin.com', 'admin'),
-                                                               (4, 'EstoqueEstatico', 'admin', 100000, 'estoques@admin.com', 'admin');
+insert into `usuario`(nome, cargo, pontos, email, senha) values ('EstoqueDinamico', 'admin', 100000, 'estoqued@admin.com', 'admin'),
+                                                               ('EstoqueEstatico', 'admin', 100000, 'estoques@admin.com', 'admin');
 
 
 
