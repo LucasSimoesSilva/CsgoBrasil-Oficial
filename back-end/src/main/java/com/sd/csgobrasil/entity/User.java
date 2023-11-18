@@ -12,6 +12,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @Entity
+@Table (name = "usuario")
 public class User{
 
     @Id

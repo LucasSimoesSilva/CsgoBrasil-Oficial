@@ -14,26 +14,23 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query(value = "SELECT COUNT(*) > 0 AS exists_entity FROM `user` as u WHERE u.email = ? OR u.nome = ?",nativeQuery = true)
     Boolean existsUserByEmailOrNome(String email, String nome);
 
-    @Query(value = "SELECT COUNT(*) > 0 AS exists_entity FROM `user` as u WHERE u.email = ? AND u.senha = ?",nativeQuery = true)
     Boolean existsUserByEmailAndSenha(String email, String senha);
 
-    @Query(value = "SELECT *  FROM `user` as u WHERE u.email = ?",nativeQuery = true)
     User findUsersByEmail(String email);
 
-    @Query(value = "SELECT skins_user_id as idSkin, user_id as idUser FROM user_skins_user WHERE user_id=?",nativeQuery = true)
+    @Query(value = "SELECT skins_user_id as idSkin, user_id as idUser FROM usuario_skins_user WHERE user_id=?",nativeQuery = true)
     List<UserSkin> listSkinsFromUser(Long userId);
 
     @Modifying
     @Transactional
-    @Query(value = "delete from user_skins_user where skins_user_id = ? and user_id= ?",nativeQuery = true)
+    @Query(value = "delete from usuario_skins_user where skins_user_id = ? and user_id= ?",nativeQuery = true)
     void deleteSkinFromUser(Long skinsPossuidasId, Long userId);
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT into user_skins_user(skins_user_id,user_id) values(?,?)",nativeQuery = true)
+    @Query(value = "INSERT into usuario_skins_user(skins_user_id,user_id) values(?,?)",nativeQuery = true)
     void addSkinFromUser(Long skinsPossuidasId, Long userId);
 
     @Query(value = """
@@ -58,7 +55,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
                                         END
                                     ELSE 0
                                 END AS idVenda
-                                FROM user_skins_user su
+                                FROM usuario_skins_user su
                                 LEFT JOIN skin s ON s.id = su.skins_user_id
                                 LEFT JOIN movement m ON s.id = m.id_skin
                                 WHERE su.user_id = ?

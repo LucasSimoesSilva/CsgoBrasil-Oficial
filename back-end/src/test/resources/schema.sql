@@ -1,4 +1,4 @@
-create table `user` (
+create table `usuario` (
                       id bigint not null auto_increment,
                       cargo varchar(255),
                       email varchar(255),
@@ -29,30 +29,30 @@ create table movement (
                           primary key (id_venda)
 );
 
-create table user_skins_user (
+create table usuario_skins_user (
                                  user_id bigint not null,
                                  skins_user_id bigint not null
 );
 
 
-alter table if exists `user`
+alter table if exists `usuario`
     drop constraint if exists UK_ob8kqyqqgmefl0aco34akdtpe;
 
-alter table if exists `user`
+alter table if exists `usuario`
     add constraint UK_ob8kqyqqgmefl0aco34akdtpe unique (email);
 
-alter table if exists `user`
+alter table if exists `usuario`
     drop constraint if exists UK_roaq6sjqx87h4xweikt9uldf5;
 
-alter table if exists `user`
+alter table if exists `usuario`
     add constraint UK_roaq6sjqx87h4xweikt9uldf5 unique (nome);
 
-alter table if exists user_skins_user
+alter table if exists usuario_skins_user
     drop constraint if exists UK_cvw1j99vgmttg3mmmyvwky5e;
 
-alter table if exists user_skins_user
+alter table if exists usuario_skins_user
     add constraint UK_cvw1j99vgmttg3mmmyvwky5e unique (skins_user_id);
 
-alter table if exists user_skins_user add constraint FKlneol2lrhckkysy0d6rhkyc8v foreign key (skins_user_id) references skin;
+alter table if exists usuario_skins_user add constraint FKlneol2lrhckkysy0d6rhkyc8v foreign key (skins_user_id) references skin;
 
-alter table if exists user_skins_user add constraint FKlxfrcbbvremrtl9ld2m73wh1 foreign key (user_id) references `user`;
+alter table if exists usuario_skins_user add constraint FKlxfrcbbvremrtl9ld2m73wh1 foreign key (user_id) references `usuario`;

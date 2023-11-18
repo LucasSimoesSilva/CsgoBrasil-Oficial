@@ -1,6 +1,6 @@
-INSERT INTO `user`(nome, cargo, pontos, email, senha) VALUES ('Carlos', 'cliente', 200, 'ca@gmail', '9090'),
+INSERT INTO `usuario`(nome, cargo, pontos, email, senha) VALUES ('Carlos', 'cliente', 200, 'ca@gmail', '9090'),
                                                            ('Administrador', 'admin', 100000, 'admin@admin.com', 'admin');
-insert into `user`(id, nome, cargo, pontos, email, senha) values (3, 'EstoqueDinamico', 'admin', 100000, 'estoqued@admin.com', 'admin'),
+insert into `usuario`(id, nome, cargo, pontos, email, senha) values (3, 'EstoqueDinamico', 'admin', 100000, 'estoqued@admin.com', 'admin'),
                                                                (4, 'EstoqueEstatico', 'admin', 100000, 'estoques@admin.com', 'admin');
 
 
@@ -43,7 +43,7 @@ insert into skin(nome,arma,preco,raridade,imagem) values
                                                       ('Whiteout', 'MP7', 2000,'Well-Worn','MP7_Whiteout.png');
 
 
-insert into user_skins_user(user_id, skins_user_id) values(1,1), (1,3),
+insert into usuario_skins_user(user_id, skins_user_id) values(1,1), (1,3),
                                                           (2,4), (2,5), (2,6), (2,7), (2,8), (2,9), (2,10),
                                                           (3,11), (3,12), (3,13), (3,14), (3,15), (3,16), (3,17), (3,18), (3,19), (3,20),
                                                           (4,21),(4,22),(4,23),(4,24),(4,25),(4,26),(4,27),(4,28),(4,29),(4,30),(4,31),(4,32),(4,33);

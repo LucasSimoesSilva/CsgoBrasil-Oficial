@@ -33,6 +33,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -156,8 +158,7 @@ public class UserControllerTest {
     void  shoudReturnATrueLoginUser() throws Exception{
         UserLogin userLogin = new UserLogin("email@email.com", "123");
 
-
-        when(service.checkLoginUser(any())).thenReturn(true);
+        when(service.checkLoginUser(userLogin)).thenReturn(true);
 
         MockHttpServletResponse response = mvc
                 .perform(
@@ -199,6 +200,7 @@ public class UserControllerTest {
     void  shoudReturnATrueUserRegister() throws Exception{
         UserRegister userRegister = new UserRegister("vandaime",
                 "vandaime@gmail.com", "123");
+
         when(service.checkIfUserExist(userRegister)).thenReturn(true);
 
         MockHttpServletResponse response = mvc

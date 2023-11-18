@@ -1,14 +1,12 @@
 package com.sd.csgobrasil.entity.DTO;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(of = {"email","senha"})
 public class UserLogin {
     private String email;
     private String senha;
