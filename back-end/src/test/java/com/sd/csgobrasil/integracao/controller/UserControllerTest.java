@@ -224,7 +224,7 @@ public class UserControllerTest {
     @DisplayName("method saveUser")
     @Test
     void  shouldReturANewUser() throws Exception{
-        User user = new User(100L,"Vandaime","6789","vandaime@email.com",0,new ArrayList<>(),  null);
+        User user = new User(10L,"Vandaime","6789","vandaime@email.com",0,new ArrayList<>(),  null);
 
         MockHttpServletResponse response = mvc
                 .perform(

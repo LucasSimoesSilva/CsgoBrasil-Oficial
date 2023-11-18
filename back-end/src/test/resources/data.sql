@@ -1,8 +1,7 @@
-INSERT INTO `usuario`(nome, cargo, pontos, email, senha) VALUES ('Carlos', 'cliente', 200, 'ca@gmail', '9090'),
-                                                           ('Administrador', 'admin', 100000, 'admin@admin.com', 'admin');
-insert into `usuario`(nome, cargo, pontos, email, senha) values ('EstoqueDinamico', 'admin', 100000, 'estoqued@admin.com', 'admin'),
-                                                               ('EstoqueEstatico', 'admin', 100000, 'estoques@admin.com', 'admin');
-
+insert into usuario(nome,cargo,pontos,email,senha) values('Carlos','cliente',200,'ca@gmail','9090'),
+                                                         ('Administrador','admin',100000,'admin@admin.com','admin');
+insert into usuario(nome,cargo,pontos,email,senha) values ('EstoqueDinamico','admin',100000,'estoqued@admin.com','admin'),
+                                                             ('EstoqueEstatico','admin',100000,'estoques@admin.com','admin');
 
 
 
@@ -44,9 +43,9 @@ insert into skin(nome,arma,preco,raridade,imagem) values
 
 
 insert into usuario_skins_user(user_id, skins_user_id) values(1,1), (1,3),
-                                                          (2,4), (2,5), (2,6), (2,7), (2,8), (2,9), (2,10),
-                                                          (3,11), (3,12), (3,13), (3,14), (3,15), (3,16), (3,17), (3,18), (3,19), (3,20),
-                                                          (4,21),(4,22),(4,23),(4,24),(4,25),(4,26),(4,27),(4,28),(4,29),(4,30),(4,31),(4,32),(4,33);
+                                                             (2,4), (2,5), (2,6), (2,7), (2,8), (2,9), (2,10),
+                                                             (3,11), (3,12), (3,13), (3,14), (3,15), (3,16), (3,17), (3,18), (3,19), (3,20),
+                                                             (4,21),(4,22),(4,23),(4,24),(4,25),(4,26),(4,27),(4,28),(4,29),(4,30),(4,31),(4,32),(4,33);
 
 insert into movement(id_comprador, id_vendedor,id_skin, estado_venda, pontos) values (1,3,3,true,7000), (1,3,1,true,10000), (2,3,4,true,6000),
                                                                                      (2,3,5,true,1000), (2,3,6,true,1400), (2,3,7,true,4000), (2,3,8,true,3000), (2,3,9,true,5000), (2,3,10,true,2500);

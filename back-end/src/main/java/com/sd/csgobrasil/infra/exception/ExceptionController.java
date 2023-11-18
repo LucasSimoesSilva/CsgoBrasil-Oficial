@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
@@ -18,6 +19,11 @@ public class ExceptionController {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<String> fieldCanNotBeBlankOrNull(){
         return ResponseEntity.badRequest().body("Blank field in the request");
+    }
+
+    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
+    public ResponseEntity<String> canNotDeleteSkinWithUser(){
+        return ResponseEntity.badRequest().body("Can not delete a skin that have an owner");
     }
 
 

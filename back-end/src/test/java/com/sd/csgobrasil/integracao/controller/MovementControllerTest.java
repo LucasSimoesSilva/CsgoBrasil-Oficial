@@ -25,8 +25,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @AutoConfigureTestDatabase
@@ -226,7 +224,7 @@ class MovementControllerTest {
             assertTrue(responseObject.contains(report));
         }
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertTrue(responseObject.size() > 1);
+        assertEquals(41,responseObject.size());
     }
 
     private List<Movement> getMovements() {
