@@ -307,6 +307,22 @@ public class MovementControllerTest {
         assertEquals("", responseMessage);
     }
 
+    @Test
+    public void deleteInvalidId() throws Exception {
+        doThrow(new NoSuchElementException()).when(service).cancelMovement(0L);
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        delete("/movement/{idVenda}",0L)
+                )
+                .andReturn().getResponse();
+
+        String messageInvalidId = "Invalid Id";
+
+        assertEquals(messageInvalidId, response.getContentAsString());
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+    }
+
 
     private List<Movement> getMovements() {
         List<Movement> movements = new ArrayList<>();

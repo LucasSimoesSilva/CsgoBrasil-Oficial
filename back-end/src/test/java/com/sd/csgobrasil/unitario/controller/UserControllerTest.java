@@ -30,7 +30,8 @@ import java.util.NoSuchElementException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @SpringBootTest
@@ -150,7 +151,7 @@ public class UserControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
 
     }
-    @DisplayName("method checkUser")
+    @DisplayName("method checkLogin")
     @Test
     void  shoudReturnATrueLoginUser() throws Exception{
         UserLogin userLogin = new UserLogin("email@email.com", "123");
@@ -171,7 +172,7 @@ public class UserControllerTest {
         assertTrue(responseObject);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-    @DisplayName("method checkUser")
+    @DisplayName("method checkLogin")
     @Test
     void  shoudReturnAFalseLoginUser() throws Exception{
         UserLogin userLogin = new UserLogin("email@email.com", "123");
@@ -258,9 +259,67 @@ public class UserControllerTest {
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
     }
      //nega
+     @Test
+     @DisplayName("method updateUser")
+     void returmAUserUpdated() throws Exception {
+
+         User user = new User(1L, "Vandaime", "6789", "vandaime@email.com",
+                 1000, getSkins(), "cliente");
+
+         when(service.updateUser(1L,user)).thenReturn(user);
 
 
+         MockHttpServletResponse response = mvc
+                 .perform(
+                         put("/user/{id}", 1L)
+                                 .contentType(MediaType.APPLICATION_JSON)
+                                 .content(userJson.write(user).getJson())
+                 )
+                 .andReturn().getResponse();
 
+         User responseObject = userJson.parse(response.getContentAsString()).getObject();
+
+         assertThat(responseObject).isNotNull();
+         assertEquals(user.getId(), responseObject.getId());
+         assertEquals(user.getNome(), responseObject.getNome());
+         assertEquals(user.getCargo(), responseObject.getCargo());
+         assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+    @DisplayName("method deleteUser")
+    @Test
+    public void deleteUser() throws Exception {
+        doNothing().when(service).deleteUser(1L);
+
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        delete("/user/{id}",1L)
+                )
+                .andReturn().getResponse();
+
+        verify(service, times(1)).deleteUser(1L);
+
+        String responseMessage = response.getContentAsString();
+
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+        assertEquals("", responseMessage);
+    }
+    @DisplayName("method deleteUser")
+    @Test
+    public void deleteInvalidUser() throws Exception {
+        doThrow(new NoSuchElementException()).when(service).deleteUser(0L);
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        delete("/user/{id}",0L)
+                )
+                .andReturn().getResponse();
+
+        String messageInvalidId = "Invalid Id";
+
+        assertEquals(messageInvalidId, response.getContentAsString());
+        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+    }
 
 
     private static List<Skin> getSkins() {
