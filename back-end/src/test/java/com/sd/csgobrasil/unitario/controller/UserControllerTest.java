@@ -1,8 +1,13 @@
 package com.sd.csgobrasil.unitario.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sd.csgobrasil.entity.DTO.MovementsId;
+import com.sd.csgobrasil.entity.DTO.UserLogin;
+import com.sd.csgobrasil.entity.DTO.UserRegister;
 import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.entity.User;
 import com.sd.csgobrasil.service.UserService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +29,7 @@ import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -41,10 +47,23 @@ public class UserControllerTest {
 
     @Autowired
     private JacksonTester<List<User>> userListJson;
-
     @Autowired
     private JacksonTester<User> userJson;
 
+    @Autowired
+    private JacksonTester<UserLogin> userLoginJson;
+    @Autowired
+    private JacksonTester<Boolean> userLoginBoolJson;
+
+    @Autowired
+    private JacksonTester<Boolean> userRegisterBoolJson;
+    @Autowired
+    private JacksonTester<UserRegister> userRegisterJson;
+
+    @BeforeEach
+    void setUp() {
+        JacksonTester.initFields(this, new ObjectMapper());
+    }
     @DisplayName("method listUsers")
     @Test
     void shoudReturnAListOfUsers() throws Exception {
@@ -131,17 +150,101 @@ public class UserControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
 
     }
+    @DisplayName("method checkUser")
     @Test
-    void postCheckLogin() throws Exception{
-        User user = new User(1L, "Mauricio", "1234",
-                "email@email.com", 11, getSkins(), "cargo");
+    void  shoudReturnATrueLoginUser() throws Exception{
+        UserLogin userLogin = new UserLogin("email@email.com", "123");
 
 
-        when(service.findByUserId(1L)).thenReturn(user);
+        when(service.checkLoginUser(any())).thenReturn(true);
 
         MockHttpServletResponse response = mvc
                 .perform(
-                        post("/user/{id}", 1L)
+                        post("/user/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(userLoginJson.write(userLogin).getJson())
+                )
+                .andReturn().getResponse();
+
+        Boolean responseObject = userLoginBoolJson.parse(response.getContentAsString()).getObject();
+
+        assertTrue(responseObject);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+    @DisplayName("method checkUser")
+    @Test
+    void  shoudReturnAFalseLoginUser() throws Exception{
+        UserLogin userLogin = new UserLogin("email@email.com", "123");
+
+
+        when(service.checkLoginUser(userLogin)).thenReturn(false);
+
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        post("/user/login")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(userLoginJson.write(userLogin).getJson())
+                )
+                .andReturn().getResponse();
+
+        Boolean responseObject = userLoginBoolJson.parse(response.getContentAsString()).getObject();
+
+        assertFalse(responseObject);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+    @DisplayName("method checkIfUserExist")
+    @Test
+    void  shoudReturnATrueUserRegister() throws Exception{
+        UserRegister userRegister = new UserRegister("vandaime",
+                "vandaime@gmail.com", "123");
+        when(service.checkIfUserExist(userRegister)).thenReturn(true);
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        post("/user/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(userRegisterJson.write(userRegister).getJson())
+                )
+                .andReturn().getResponse();
+
+        Boolean responseObject = userRegisterBoolJson.parse(response.getContentAsString()).getObject();
+
+        assertTrue(responseObject);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+    @DisplayName("method checkIfUserExist")
+    @Test
+    void  shoudReturnAFalseUserRegister() throws Exception{
+        UserRegister userRegister = new UserRegister("vandaime",
+                "vandaime@gmail.com", "123");
+        when(service.checkIfUserExist(userRegister)).thenReturn(false);
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        post("/user/register")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(userRegisterJson.write(userRegister).getJson())
+                )
+                .andReturn().getResponse();
+
+        Boolean responseObject = userLoginBoolJson.parse(response.getContentAsString()).getObject();
+
+        assertFalse(responseObject);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @DisplayName("method saveUser")
+    @Test
+    void  shouldReturANewUser() throws Exception{
+
+        User user = new User(1L, "Vandaime", "6789", "vandaime@email.com",
+                1000, getSkins(), "cliente");
+        when(service.addUser(any(User.class))).thenReturn(user);
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        post("/user")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(userJson.write(user).getJson())
                 )
@@ -149,11 +252,15 @@ public class UserControllerTest {
 
         User responseObject = userJson.parse(response.getContentAsString()).getObject();
 
-        assertThat(responseObject).isNotNull();
-        assertEquals(user, responseObject);
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-
+        assertEquals(user.getId(), responseObject.getId());
+        assertEquals(user.getNome(), responseObject.getNome());
+        assertEquals(user.getCargo(), responseObject.getCargo());
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
     }
+     //nega
+
+
+
 
 
     private static List<Skin> getSkins() {
