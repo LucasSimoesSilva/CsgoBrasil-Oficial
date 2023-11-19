@@ -53,7 +53,7 @@ public class SkinService {
         if(exists){
             repository.deleteById(id);
         }else {
-            throw new NoSuchElementException();
+            throw new NoSuchElementException("Invalid id");
         }
     }
 }

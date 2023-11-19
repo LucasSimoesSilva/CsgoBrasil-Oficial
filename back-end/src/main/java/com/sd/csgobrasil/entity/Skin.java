@@ -37,4 +37,11 @@ public class Skin{
     public Skin() {
     }
 
+    public Skin(String nome, String arma, int preco, String raridade, String imagem) {
+        this.nome = nome;
+        this.arma = arma;
+        this.preco = preco;
+        this.raridade = raridade;
+        this.imagem = imagem;
+    }
 }
