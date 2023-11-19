@@ -1,5 +1,6 @@
 package com.sd.csgobrasil.unitario.service;
 
+import com.sd.csgobrasil.entity.DTO.UserRegister;
 import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.entity.User;
 import com.sd.csgobrasil.repository.UserRepository;
@@ -13,7 +14,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -57,7 +59,26 @@ class UserServiceTest {
 
         List<User> usersList = service.listUsers();
 
+        assertThat(usersList).isEmpty();
         assertEquals(users,usersList);
+    }
+
+    @Test
+    void givenUserRegister_thenTrueIfRegisterExist(){
+        UserRegister userRegister = new UserRegister("Carlos","ca@gmail","1234");
+        when(repository.existsUserByEmailOrNome(userRegister.getEmail(), userRegister.getNome())).thenReturn(true);
+
+        boolean check = service.checkIfUserExist(userRegister);
+        assertTrue(check);
+    }
+
+    @Test
+    void givenUserRegister_thenFalseIfRegisterDoNotExist(){
+        UserRegister userRegister = new UserRegister("Carlos","ca@gmail","1234");
+        when(repository.existsUserByEmailOrNome(userRegister.getEmail(), userRegister.getNome())).thenReturn(false);
+
+        boolean check = service.checkIfUserExist(userRegister);
+        assertFalse(check);
     }
 
     private List<Skin> getSkins() {
