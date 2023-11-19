@@ -22,8 +22,8 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<String> canNotDeleteSkinWithUser(){
-        return ResponseEntity.badRequest().body("Can not delete a skin that have an owner");
+    public ResponseEntity<String> sqlErrorExecution(SQLIntegrityConstraintViolationException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
 

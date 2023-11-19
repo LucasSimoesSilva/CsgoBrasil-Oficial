@@ -2,6 +2,7 @@ package com.sd.csgobrasil.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ public class User{
     private Long id;
     @Column(unique = true)
     @NotNull
+    @NotBlank
     private String nome;
     @NotNull
     private String cargo;
@@ -27,6 +29,7 @@ public class User{
     private int pontos;
     @Column(unique = true)
     @NotNull
+    @NotBlank
     private String email;
     @NotNull
     private String senha;
@@ -44,13 +47,10 @@ public class User{
         this.cargo = cargo;
     }
 
-    public User(String nome, String senha, String email, int pontos, List<Skin> skinsUser, String cargo) {
+    public User(String nome, String senha, String email) {
         this.nome = nome;
-        this.cargo = cargo;
-        this.pontos = pontos;
         this.email = email;
         this.senha = senha;
-        this.skinsUser = skinsUser;
     }
 
     public User(String email, String senha, int pontos, String cargo) {

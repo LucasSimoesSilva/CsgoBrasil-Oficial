@@ -49,9 +49,11 @@ public class UserService {
 
     public User updateUser(Long id, User user){
         user.setId(id);
-        return repository.save(user);}
+        return repository.save(user);
+    }
 
-    public User findByUserId(Long id){return repository.findById(id).get();}
+    public User findByUserId(Long id){
+        return repository.findById(id).get();}
 
     public void deleteUser(Long id){repository.deleteById(id);}
 
