@@ -201,7 +201,10 @@ public class SkinControllerTest {
         String responseMessage = response.getContentAsString();
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        assertEquals("Can not delete a skin that have an owner", responseMessage);
+        assertEquals("Referential integrity constraint violation:" +
+                " \"FKLNEOL2LRHCKKYSY0D6RHKYC8V: PUBLIC.USUARIO_SKINS_USER FOREIGN KEY(SKINS_USER_ID)" +
+                " REFERENCES PUBLIC.SKIN(ID) (CAST(1 AS BIGINT))\"; SQL statement:\n" +
+                "delete from skin where id=? [23503-214]", responseMessage);
     }
 
     @DisplayName("method deleteSkin")

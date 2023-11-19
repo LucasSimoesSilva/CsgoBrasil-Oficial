@@ -33,11 +33,7 @@ class UserServiceTest {
 
     @Test
     void givenRequest_thenReturnAnUserList(){
-        List<User> users = new ArrayList<>();
-        User user1 = new User(1L,"Carlos","9090","ca@gmail",200,null,"cliente");
-        User user2 = new User(2L,"Administrador","admin","admin@admin.com",100000,null,"admin");
-        users.add(user2);
-        users.add(user1);
+        List<User> users = getUsers();
 
         for (User user : users) {
             when(userSkinService.listSkinsFromUser(user.getId())).thenReturn(getSkins());
@@ -79,6 +75,7 @@ class UserServiceTest {
         boolean check = service.checkIfUserExist(userRegister);
         assertFalse(check);
     }
+
     @Test
     void givenLogin_whenLoginIsValid_thenReturnTrue (){
         UserLogin userLogin = new UserLogin("ca@gmail.com","1234");
@@ -106,7 +103,6 @@ class UserServiceTest {
         User userInfo = service.getUserInfo("cal@gmail.com");
         assertNull(userInfo);
     }
-
     @Test
     void givenUser_thenAddUserToDatabaseAndReturnUserWithId(){
         User user = new User("Carlos","123","ca@gmail");
@@ -175,5 +171,14 @@ class UserServiceTest {
         skins.add(new Skin(3L, "Dragon Blue", "AWP", 100, "Veterana", ""));
         return skins;
 
+    }
+
+    private List<User> getUsers() {
+        List<User> users = new ArrayList<>();
+        User user1 = new User(1L,"Carlos","9090","ca@gmail",200,null,"cliente");
+        User user2 = new User(2L,"Administrador","admin","admin@admin.com",100000,null,"admin");
+        users.add(user2);
+        users.add(user1);
+        return users;
     }
 }

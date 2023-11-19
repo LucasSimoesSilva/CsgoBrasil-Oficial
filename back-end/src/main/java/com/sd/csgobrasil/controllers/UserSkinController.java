@@ -3,13 +3,11 @@ package com.sd.csgobrasil.controllers;
 import com.sd.csgobrasil.entity.DTO.SkinWithState;
 import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.service.UserSkinService;
-import com.sd.csgobrasil.util.SkinWithStateImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
