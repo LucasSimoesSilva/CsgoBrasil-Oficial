@@ -1,5 +1,6 @@
 package com.sd.csgobrasil.unitario.service;
 
+import com.sd.csgobrasil.entity.DTO.UserLogin;
 import com.sd.csgobrasil.entity.DTO.UserRegister;
 import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.entity.User;
@@ -80,6 +81,34 @@ class UserServiceTest {
         boolean check = service.checkIfUserExist(userRegister);
         assertFalse(check);
     }
+    @Test
+    void checkLoginUserTest (){
+        UserLogin userLogin = new UserLogin("ca@gmail.com","1234");
+        when(repository.existsUserByEmailAndSenha(userLogin.getEmail(), userLogin.getSenha())).thenReturn(true);
+        boolean check = service.checkLoginUser(userLogin);
+        assertTrue(check);
+    }
+    @Test
+    void checkLoginInvalidUserTest () {
+        UserLogin userLogin = new UserLogin("ca@gmail.com", "1234");
+        when(repository.existsUserByEmailAndSenha(userLogin.getEmail(), userLogin.getSenha())).thenReturn(false);
+        boolean check = service.checkLoginUser(userLogin);
+        assertFalse(check);
+    }
+    @Test
+    void getUserInfo(){
+        User userEmail = new User("ca@gmail.com","1234",9090,"cliente");
+        when(repository.findUsersByEmail(userEmail.getEmail())).thenReturn(userEmail);
+        User userInfo = service.getUserInfo(userEmail.getEmail());
+        assertEquals(userEmail,userInfo);
+    }
+    @Test
+    void getUserInvalidInfo(){
+        when(repository.findUsersByEmail("cal@gmail.com")).thenReturn(null);
+        User userInfo = service.getUserInfo("cal@gmail.com");
+        assertNull(userInfo);
+    }
+
 
     private List<Skin> getSkins() {
         List<Skin> skins = new ArrayList<>();
@@ -87,5 +116,6 @@ class UserServiceTest {
         skins.add(new Skin(2L, "Dragon Red", "Pistol", 100, "Velha de Guerra", ""));
         skins.add(new Skin(3L, "Dragon Blue", "AWP", 100, "Veterana", ""));
         return skins;
+
     }
 }
