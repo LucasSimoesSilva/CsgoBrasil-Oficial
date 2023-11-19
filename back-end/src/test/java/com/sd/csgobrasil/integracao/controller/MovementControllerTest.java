@@ -207,11 +207,7 @@ class MovementControllerTest {
     @DisplayName("method MakeReport")
     @Test
     void getReportList() throws Exception {
-        List<Report> reportList = new ArrayList<>();
-        reportList.add(new ReportImpl(2L,"EstoqueDinamico","Carlos","AWP Dragon Lore",true,10000));
-        reportList.add(new ReportImpl(12L,"Administrador",null,"M4A1-S Hot Rod",false,6000));
-        reportList.add(new ReportImpl(22L,"EstoqueDinamico",null,"AK-47 Vulcan",false,8000));
-        reportList.add(new ReportImpl(40L,"EstoqueEstatico",null,"MP7 Impire",false,1500));
+        List<Report> reportList = getReports();
 
         MockHttpServletResponse response = mvc.
                 perform(get("/movement/report")).andReturn().getResponse();
@@ -225,6 +221,15 @@ class MovementControllerTest {
         }
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(41,responseObject.size());
+    }
+
+    private List<Report> getReports() {
+        List<Report> reportList = new ArrayList<>();
+        reportList.add(new ReportImpl(2L,"EstoqueDinamico","Carlos","AWP Dragon Lore",true,10000));
+        reportList.add(new ReportImpl(12L,"Administrador",null,"M4A1-S Hot Rod",false,6000));
+        reportList.add(new ReportImpl(22L,"EstoqueDinamico",null,"AK-47 Vulcan",false,8000));
+        reportList.add(new ReportImpl(40L,"EstoqueEstatico",null,"MP7 Impire",false,1500));
+        return reportList;
     }
 
     private List<Movement> getMovements() {
