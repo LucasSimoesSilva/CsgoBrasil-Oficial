@@ -2,6 +2,7 @@ package com.sd.csgobrasil.entity;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -20,18 +21,22 @@ public class Skin{
     private Long id;
 
     @NotNull
+    @NotBlank
     private String nome;
 
     @NotNull
+    @NotBlank
     private String arma;
 
     @NotNull
     private int preco;
 
     @NotNull
+    @NotBlank
     private String raridade;
 
     @NotNull
+    @NotBlank
     private String imagem;
 
     public Skin() {

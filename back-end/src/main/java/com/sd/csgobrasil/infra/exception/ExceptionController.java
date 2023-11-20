@@ -17,8 +17,8 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<String> fieldCanNotBeBlankOrNull(){
-        return ResponseEntity.badRequest().body("Blank field in the request");
+    public ResponseEntity<String> fieldCanNotBeBlankOrNull(ConstraintViolationException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)

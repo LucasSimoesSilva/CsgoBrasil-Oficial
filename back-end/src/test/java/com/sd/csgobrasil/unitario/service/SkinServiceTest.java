@@ -58,13 +58,26 @@ class SkinServiceTest {
     }
 
     @Test
-    void givenInvalidIdAndValidSkin_thenCreateNewSkinInDatabaseAndReturnSkin(){
+    void givenInvalidIdSkin_thenCreateNewSkinInDatabaseAndReturnSkin(){
         Skin skin = new Skin("Dragao","AWP",100,"Nova","");
         Skin skinRight = new Skin(5L,"Dragao","AWP",100,"Nova","");
         Long idInvalid = -1L;
 
         when(repository.save(skin)).thenReturn(skinRight);
         Skin skinTest = service.updateSkin(idInvalid,skin);
+
+        assertNotNull(skinTest);
+        assertEquals(skinRight,skinTest);
+    }
+
+    @Test
+    void givenValidSkin_thenUpdateSkinInDatabaseAndReturnSkin(){
+        Skin skin = new Skin(5L,"Dragon Blue","AWP",100,"Nova","");
+        Skin skinRight = new Skin(5L,"Dragon White","AWP",1000,"Velha","");
+        Long idInvalid = skin.getId();
+
+        when(repository.save(skinRight)).thenReturn(skinRight);
+        Skin skinTest = service.updateSkin(idInvalid,skinRight);
 
         assertNotNull(skinTest);
         assertEquals(skinRight,skinTest);
@@ -121,7 +134,10 @@ class SkinServiceTest {
                 "Dragon Lore","AWP",100,"Nova de Guerra",""));
 
         skinsRight.add(new SkinMovement(2L,1L,false,
-                "Dragon Red", "Pistol", 100, "Velha de Guerra", ""));
+                "Dragon Red", "Pistol", 200, "Velha de Guerra", ""));
+
+        skinsRight.add(new SkinMovement(4L,4L,false,
+                "Dragon Blue", "AWP", 400, "Veterana", ""));
 
         for (int i = 0; i < movements.size(); i++) {
             when(repository.findById(movements.get(i).getIdSkin())).thenReturn(Optional.of(getSkins().get(i)));
@@ -136,16 +152,19 @@ class SkinServiceTest {
     private List<Skin> getSkins() {
         List<Skin> skins = new ArrayList<>();
         skins.add(new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", ""));
-        skins.add(new Skin(2L, "Dragon Red", "Pistol", 100, "Velha de Guerra", ""));
-        skins.add(new Skin(3L, "Dragon Blue", "AWP", 100, "Veterana", ""));
+        skins.add(new Skin(2L, "Dragon Red", "Pistol", 200, "Velha de Guerra", ""));
+        skins.add(new Skin(2L, "Dragon White", "M4", 300, "Velha de Guerra", ""));
+        skins.add(new Skin(3L, "Dragon Blue", "AWP", 400, "Veterana", ""));
         return skins;
 
     }
 
     private List<Movement> getMovements() {
         List<Movement> movements = new ArrayList<>();
-        movements.add(new Movement(1L, 1L, 2L, 1L, false, 123));
-        movements.add(new Movement(2L, 1L, 2L, 2L, false, 234));
+        movements.add(new Movement(1L, 1L, null, 1L, false, 123));
+        movements.add(new Movement(2L, 1L, null, 2L, false, 234));
+        movements.add(new Movement(3L, 1L, 2L, 2L, true, 567));
+        movements.add(new Movement(4L, 4L, 2L, 2L, false, 567));
         return movements;
     }
 }
