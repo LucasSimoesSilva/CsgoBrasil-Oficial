@@ -57,7 +57,7 @@ class SkinServiceTest {
     }
 
     @Test
-    void givenInvalidSkin_thenReturnTheSkinWithId(){
+    void givenInvalidSkin_thenThrowConstraintViolationException(){
         Skin skin = new Skin(null,"AWP",10000,"Factory New","AWP_Dragon_Blue.png");
 
         try {

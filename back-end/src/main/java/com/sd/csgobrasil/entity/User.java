@@ -60,6 +60,15 @@ public class User{
         this.cargo = cargo;
     }
 
+    public User(String nome, String senha, String email, int pontos, List<Skin> skinsUser, String cargo) {
+        this.nome = nome;
+        this.cargo = cargo;
+        this.pontos = pontos;
+        this.email = email;
+        this.senha = senha;
+        this.skinsUser = skinsUser;
+    }
+
     public User() {
     }
 

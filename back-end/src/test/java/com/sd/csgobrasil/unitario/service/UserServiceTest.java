@@ -148,7 +148,6 @@ class UserServiceTest {
     @Test
     void givenInvalidId_thenThrowNoSuchElementException(){
         doThrow(new NoSuchElementException("Invalid id")).when(repository).findById(-1L);
-
         try {
             service.findByUserId(-1L);
         }catch (NoSuchElementException e){
