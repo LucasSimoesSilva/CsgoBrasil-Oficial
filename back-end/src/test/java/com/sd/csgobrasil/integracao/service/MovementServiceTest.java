@@ -36,7 +36,7 @@ public class MovementServiceTest {
     @Test
     void givenRequest_thenReturnAMovementList(){
         List<Movement> movementsRight = getMovements();
-        when(repository.findAll()).thenReturn(movementsRight);
+
 
         List<Movement> movementsTest = service.listMovement();
 
@@ -47,7 +47,7 @@ public class MovementServiceTest {
     @Test
     void givenRequest_thenReturnAnEmptyList(){
         List<Movement> movementsRight = new ArrayList<>();
-        when(repository.findAll()).thenReturn(movementsRight);
+
 
         List<Movement> movementsTest = service.listMovement();
 
@@ -61,7 +61,7 @@ public class MovementServiceTest {
 
         Movement movementRight = new Movement(1L, 3L, 1L, 3L, false, 7000);
 
-        when(repository.save(movement)).thenReturn(movementRight);
+
 
         Movement movementTest = service.addMovement(movement);
         assertEquals(movementRight,movementTest);
@@ -71,7 +71,7 @@ public class MovementServiceTest {
     void givenValidIdAndValidMovement_thenUpdateMovementInDatabaseAndReturnMovement(){
         Movement movementRight = new Movement(1L, 3L, 1L, 3L, true, 7000);
 
-        when(repository.save(movementRight)).thenReturn(movementRight);
+
 
         Movement movementTest = service.updateM(movementRight);
         assertEquals(movementRight,movementTest);
@@ -81,7 +81,7 @@ public class MovementServiceTest {
     void givenValidId_thenReturnMovement(){
         Movement movementRight = new Movement(1L, 3L, 1L, 3L, true, 7000);
 
-        when(repository.findById(movementRight.getIdVenda())).thenReturn(Optional.of(movementRight));
+
 
         Movement movementTest = service.findByMovementId(1L);
         assertEquals(movementRight,movementTest);
@@ -109,7 +109,7 @@ public class MovementServiceTest {
     @Test
     void givenRequest_thenReturnAListWithTheReports(){
         List<Report> reportsRight = getReports();
-        when(repository.makeReport()).thenReturn(reportsRight);
+
 
         List<Report> reportsTest = service.makeReport();
 
@@ -120,7 +120,7 @@ public class MovementServiceTest {
     @Test
     void givenRequest_whenDoNotHaveMovements_thenReturnAnEmptyList(){
         List<Report> reportsRight = new ArrayList<>();
-        when(repository.makeReport()).thenReturn(reportsRight);
+
 
         List<Report> reportsTest = service.makeReport();
 
@@ -138,17 +138,9 @@ public class MovementServiceTest {
         User comprador = new User(1L,"Carlos","9090","ca@gmail",20000,null,"cliente");
         User vendedor = new User(2L,"Administrador","admin","admin@admin.com",100000,null,"admin");
 
-        when(repository.findById(idVenda)).thenReturn(Optional.of(movement));
-        when(skinService.findBySkinId(movement.getIdSkin())).thenReturn(skinMovement);
-        when(userService.findByUserId(idComprador)).thenReturn(comprador);
-        when(userService.findByUserId(movement.getIdVendedor())).thenReturn(vendedor);
 
-        doNothing().when(userSkinService).deleteSkinFromUser(skinMovement.getId(), vendedor.getId());
-        doNothing().when(userSkinService).addSkinFromUser(skinMovement.getId(), comprador.getId());
-        when(userService.updateUser(comprador.getId(), comprador)).thenReturn(new User());
-        when(userService.updateUser(vendedor.getId(), vendedor)).thenReturn(new User());
 
-        when(repository.save(movement)).thenReturn(new Movement());
+
 
         boolean check = service.makeMovement(idVenda, idComprador);
         assertTrue(check);
@@ -163,10 +155,7 @@ public class MovementServiceTest {
         User comprador = new User(1L,"Carlos","9090","ca@gmail",20000,null,"cliente");
         User vendedor = new User(1L,"Carlos","9090","ca@gmail",20000,null,"cliente");
 
-        when(repository.findById(idVenda)).thenReturn(Optional.of(movement));
-        when(skinService.findBySkinId(movement.getIdSkin())).thenReturn(skinMovement);
-        when(userService.findByUserId(idComprador)).thenReturn(comprador);
-        when(userService.findByUserId(movement.getIdVendedor())).thenReturn(vendedor);
+
 
         boolean check = service.makeMovement(idVenda, idComprador);
         assertFalse(check);
@@ -181,10 +170,7 @@ public class MovementServiceTest {
         User comprador = new User(1L,"Carlos","9090","ca@gmail",2,null,"cliente");
         User vendedor = new User(2L,"Administrador","admin","admin@admin.com",100000,null,"admin");
 
-        when(repository.findById(idVenda)).thenReturn(Optional.of(movement));
-        when(skinService.findBySkinId(movement.getIdSkin())).thenReturn(skinMovement);
-        when(userService.findByUserId(idComprador)).thenReturn(comprador);
-        when(userService.findByUserId(movement.getIdVendedor())).thenReturn(vendedor);
+
 
         boolean check = service.makeMovement(idVenda, idComprador);
         assertFalse(check);
