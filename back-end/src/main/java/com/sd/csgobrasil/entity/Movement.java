@@ -18,7 +18,6 @@ public class Movement{
     private Long idVenda;
     @NotNull
     private Long idVendedor;
-    @NotNull
     private Long idComprador;
     @NotNull
     private Long idSkin;
@@ -50,15 +49,4 @@ public class Movement{
     public Movement() {
     }
 
-    @Override
-    public String toString() {
-        return "Movement{" +
-                "idVenda=" + idVenda +
-                ", idVendedor=" + idVendedor +
-                ", idComprador=" + idComprador +
-                ", idSkin=" + idSkin +
-                ", estadoVenda=" + estadoVenda +
-                ", pontos=" + pontos +
-                '}';
-    }
 }

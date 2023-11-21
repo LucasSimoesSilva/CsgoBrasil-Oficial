@@ -98,16 +98,4 @@ public class User{
         return Objects.equals(this.senha, other.senha);
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", cargo='" + cargo + '\'' +
-                ", pontos=" + pontos +
-                ", email='" + email + '\'' +
-                ", senha='" + senha + '\'' +
-                ", skinsPossuidas=" + skinsUser +
-                '}';
-    }
 }

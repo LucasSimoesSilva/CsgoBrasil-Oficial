@@ -168,7 +168,7 @@ class MovementServiceTest {
     }
 
     @Test
-    void givenValidIdVendaAndValidIdComprador_whenVendedorIsEqualsToComprador_thenReturnTrue(){
+    void givenValidIdVendaAndValidIdComprador_whenVendedorIsEqualsToComprador_thenReturnFalse(){
         Long idVenda = 1L;
         Long idComprador = 1L;
         Movement movement = new Movement(1L, 2L, 1L, 3L, true, 7000);
@@ -186,7 +186,7 @@ class MovementServiceTest {
     }
 
     @Test
-    void givenValidIdVendaAndValidIdComprador_whenVendedorIsNotEqualsToComprador_whenCompradorHaveLessPointsToTheSkinPrice_thenReturnTrue(){
+    void givenValidIdVendaAndValidIdComprador_whenVendedorIsNotEqualsToComprador_whenCompradorHaveLessPointsToTheSkinPrice_thenReturnFalse(){
         Long idVenda = 1L;
         Long idComprador = 1L;
         Movement movement = new Movement(1L, 2L, 1L, 3L, true, 7000);
