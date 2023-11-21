@@ -11,10 +11,10 @@ public class NumericBooleanDeserializer extends JsonDeserializer {
     public Integer deserialize(JsonParser p, DeserializationContext ctxt)
             throws IOException {
         if ("true".equals(p.getText())) {
-            return 0;
+            return 1;
         }
         if ("false".equals(p.getText())) {
-            return 1;
+            return 0;
         }
         return null;
     }

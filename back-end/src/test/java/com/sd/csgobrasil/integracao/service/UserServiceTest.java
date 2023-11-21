@@ -82,8 +82,10 @@ class UserServiceTest {
 
     @Test
     void givenEmail_whenEmailIsValid_thenReturnTrue() {
+        String nomeUser = "Carlos";
         User userRight = new User("ca@gmail", "9090", 200, "cliente");
         User userTest = service.getUserInfo(userRight.getEmail());
+        userRight.setNome(nomeUser);
         assertEquals(userRight, userTest);
     }
 
