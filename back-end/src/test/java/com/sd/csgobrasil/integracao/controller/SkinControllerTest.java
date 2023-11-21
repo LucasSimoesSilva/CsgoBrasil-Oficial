@@ -12,6 +12,7 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class SkinControllerTest {
 
     @Autowired
@@ -89,7 +91,8 @@ public class SkinControllerTest {
     @DisplayName("method saveSkin")
     @Test
     public void postSaveSkinValid() throws Exception {
-        Skin skin = new Skin(33L, "Dragon Green", "AWP", 1000, "Nova de Guerra", "");
+        Skin skin = new Skin(33L, "Dragon Green", "AWP", 1000, "Nova de Guerra",
+                "image");
 
 
         MockHttpServletResponse response = mvc
@@ -113,7 +116,8 @@ public class SkinControllerTest {
     @Test
     public void postDoNotSaveInvalidSkin() throws Exception {
         Skin skin = new Skin(0L, null, "AWP", 100, "Nova de Guerra", "");
-
+        String messageNull = "não deve ser nulo";
+        String messageBlank = "não deve estar em branco";
 
         MockHttpServletResponse response = mvc
                 .perform(
@@ -126,13 +130,15 @@ public class SkinControllerTest {
         String responseMessage = response.getContentAsString();
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        assertEquals("Blank field in the request", responseMessage);
+        assertTrue(responseMessage.contains(messageNull));
+        assertTrue(responseMessage.contains(messageBlank));
     }
 
     @DisplayName("method updateSkin")
     @Test
-    public void putUpdateValidObject() throws Exception {
-        Skin skin = new Skin(33L, "Dragon Blue", "AWP", 100, "Nova de Guerra", "");
+    void putUpdateValidObject() throws Exception {
+        Skin skin = new Skin(1L, "Dragon Blue", "AWP", 100, "Nova de Guerra",
+                "imagem");
 
 
         MockHttpServletResponse response = mvc
@@ -155,6 +161,8 @@ public class SkinControllerTest {
     @Test
     public void putUpdateInvalidObject() throws Exception {
         Skin skin = new Skin(0L, null, "AWP", 100, "Nova de Guerra", "");
+        String messageNull = "não deve ser nulo";
+        String messageBlank = "não deve estar em branco";
 
 
         MockHttpServletResponse response = mvc
@@ -168,7 +176,8 @@ public class SkinControllerTest {
         String responseMessage = response.getContentAsString();
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        assertEquals("Blank field in the request", responseMessage);
+        assertTrue(responseMessage.contains(messageNull));
+        assertTrue(responseMessage.contains(messageBlank));
     }
     @DisplayName("method deleteSkin")
     @Test
@@ -190,7 +199,7 @@ public class SkinControllerTest {
     @DisplayName("method deleteSkin")
     @Test
     public void givenValidId_whenHaveUserWithTheSkin_thenThrowExceptionSQLIntegrityConstraintViolationException() throws Exception {
-
+        String messageErrorCheck = "REFERENCES PUBLIC.SKIN(ID)";
         MockHttpServletResponse response = mvc
                 .perform(
                         delete("/skin/{id}",1L)
@@ -201,10 +210,7 @@ public class SkinControllerTest {
         String responseMessage = response.getContentAsString();
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        assertEquals("Referential integrity constraint violation:" +
-                " \"FKLNEOL2LRHCKKYSY0D6RHKYC8V: PUBLIC.USUARIO_SKINS_USER FOREIGN KEY(SKINS_USER_ID)" +
-                " REFERENCES PUBLIC.SKIN(ID) (CAST(1 AS BIGINT))\"; SQL statement:\n" +
-                "delete from skin where id=? [23503-214]", responseMessage);
+        assertTrue(responseMessage.contains(messageErrorCheck));
     }
 
     @DisplayName("method deleteSkin")

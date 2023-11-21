@@ -1,6 +1,7 @@
 package com.sd.csgobrasil.infra.exception;
 
 import jakarta.validation.ConstraintViolationException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -22,7 +23,12 @@ public class ExceptionController {
     }
 
     @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<String> sqlErrorExecution(SQLIntegrityConstraintViolationException ex){
+    public ResponseEntity<String> sqlQueryErrorExecution(SQLIntegrityConstraintViolationException ex){
+        return ResponseEntity.badRequest().body(ex.getMessage());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<String> sqlDataErrorExecution(DataIntegrityViolationException ex){
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 

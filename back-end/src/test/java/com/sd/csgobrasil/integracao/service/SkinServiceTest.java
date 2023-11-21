@@ -142,7 +142,6 @@ class SkinServiceTest {
     @Test
     void givenMovementList_whenListIsEmpty_thenReturnEmptyListSkinWithState(){
         List<Movement> movements = new ArrayList<>();
-        List<SkinMovement> skinsRight = new ArrayList<>();
 
         List<SkinMovement> skinMovementsTest = service.getSkinMovements(movements);
 

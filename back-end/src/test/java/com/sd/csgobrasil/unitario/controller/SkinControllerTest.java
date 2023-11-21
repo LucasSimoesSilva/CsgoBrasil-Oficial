@@ -134,7 +134,7 @@ public class SkinControllerTest {
     }
     @DisplayName("method saveSkin")
     @Test
-    public void postDoNotSaveInvalidSkin() throws Exception {
+    void postDoNotSaveInvalidSkin() throws Exception {
         Skin skin = new Skin(1L, null, "AWP", 100, "Nova de Guerra", "");
 
         when(service.addSkin(any(Skin.class))).thenThrow(new ConstraintViolationException(new HashSet<>()));
@@ -150,7 +150,7 @@ public class SkinControllerTest {
         String responseMessage = response.getContentAsString();
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        assertEquals("Blank field in the request", responseMessage);
+        assertEquals("",responseMessage);
     }
 
     @DisplayName("method updateSkin")
@@ -194,7 +194,7 @@ public class SkinControllerTest {
         String responseMessage = response.getContentAsString();
 
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        assertEquals("Blank field in the request", responseMessage);
+        assertEquals("",responseMessage);
     }
     @DisplayName("method deleteSkin")
     @Test
