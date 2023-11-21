@@ -2,8 +2,6 @@ package com.sd.csgobrasil.integracao.service;
 
 import com.sd.csgobrasil.entity.DTO.Report;
 import com.sd.csgobrasil.entity.Movement;
-import com.sd.csgobrasil.entity.Skin;
-import com.sd.csgobrasil.entity.User;
 import com.sd.csgobrasil.service.MovementService;
 import com.sd.csgobrasil.util.ReportImpl;
 import jakarta.validation.ConstraintViolationException;
