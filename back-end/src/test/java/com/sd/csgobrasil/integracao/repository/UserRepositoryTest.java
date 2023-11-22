@@ -123,16 +123,7 @@ class UserRepositoryTest {
                 new Skin(3L,"Cyrex","M4A1-S",7000,"Minimal Wear","M4A1-S_Cyrex.png")));
         User userRight = new User(1L, "Carlos", "9090", "ca@gmail", 200, skins,
                 "cliente");
-
-        assertAll(
-                () -> assertEquals(userRight.getId(), userTest.getId()),
-                () -> assertEquals(userRight.getCargo(), userTest.getCargo()),
-                () -> assertEquals(userRight.getEmail(), userTest.getEmail()),
-                () -> assertEquals(userRight.getNome(), userTest.getNome()),
-                () -> assertEquals(userRight.getPontos(), userTest.getPontos()),
-                () -> assertEquals(userRight.getSenha(), userTest.getSenha()),
-                () -> assertIterableEquals(userRight.getSkinsUser(), userTest.getSkinsUser())
-        );
+        assertEquals(userRight, userTest);
     }
 
     @Test
