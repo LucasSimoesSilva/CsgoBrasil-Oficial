@@ -9,26 +9,46 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @ActiveProfiles("test")
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest
 class NumericBooleanDeserializerTest {
 
-    NumericBooleanDeserializer deserializer;
+    @Test
+    void givenTrue_thenReturnValue1() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(Integer.class, new NumericBooleanDeserializer());
+        mapper.registerModule(module);
+
+        String json = "true";
+        Integer value = mapper.readValue(json, Integer.class);
+        assertEquals(1, value);
+    }
 
     @Test
-    void testIntegration() throws Exception {
-        deserializer = new NumericBooleanDeserializer();
+    void givenFalse_thenReturnValue0() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
         SimpleModule module = new SimpleModule();
-        module.addDeserializer(Integer.class, deserializer);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.registerModule(module);
+        module.addDeserializer(Integer.class, new NumericBooleanDeserializer());
+        mapper.registerModule(module);
 
-        String jsonString = "{\"yourField\":\"true\"}";
+        String json = "false";
+        Integer value = mapper.readValue(json, Integer.class);
+        assertEquals(0, value);
+    }
 
-        Integer seuObjeto = objectMapper.readValue(jsonString, Integer.class);
+    @Test
+    void givenJson_whenJsonIsNeitherFalseNorTrue_thenReturnNull() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
+        SimpleModule module = new SimpleModule();
+        module.addDeserializer(Integer.class, new NumericBooleanDeserializer());
+        mapper.registerModule(module);
 
-        assertEquals(Integer.valueOf(1), seuObjeto);
+        String json = "null";
+        Integer value = mapper.readValue(json, Integer.class);
+        assertNull(value);
     }
 }
