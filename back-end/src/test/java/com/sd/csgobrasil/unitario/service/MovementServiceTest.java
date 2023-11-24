@@ -62,7 +62,7 @@ class MovementServiceTest {
     }
 
     @Test
-    void givenRequest_thenReturnAMovementList(){
+    void givenRequest_thenReturnAMovementList() {
         List<Movement> movementsRight = movementList;
         when(repository.findAll()).thenReturn(movementsRight);
 
@@ -73,7 +73,7 @@ class MovementServiceTest {
     }
 
     @Test
-    void givenRequest_thenReturnAnEmptyList(){
+    void givenRequest_thenReturnAnEmptyList() {
         List<Movement> movementsRight = new ArrayList<>();
         when(repository.findAll()).thenReturn(movementsRight);
 
@@ -84,50 +84,50 @@ class MovementServiceTest {
     }
 
     @Test
-    void givenMovement_thenAddMovementToDatabaseAndReturnMovementWithId(){
-        Movement movement = new Movement(3L,3L,true,7000);
+    void givenMovement_thenAddMovementToDatabaseAndReturnMovementWithId() {
+        Movement movement = new Movement(3L, 3L, true, 7000);
 
         Movement movementRight = movementCorrect;
 
         when(repository.save(movement)).thenReturn(movementRight);
 
         Movement movementTest = service.addMovement(movement);
-        assertEquals(movementRight,movementTest);
+        assertEquals(movementRight, movementTest);
     }
 
     @Test
-    void givenValidIdAndValidMovement_thenUpdateMovementInDatabaseAndReturnMovement(){
+    void givenValidIdAndValidMovement_thenUpdateMovementInDatabaseAndReturnMovement() {
         Movement movementRight = movementCorrect;
 
         when(repository.save(movementRight)).thenReturn(movementRight);
 
         Movement movementTest = service.updateM(movementRight);
-        assertEquals(movementRight,movementTest);
+        assertEquals(movementRight, movementTest);
     }
 
     @Test
-    void givenValidId_thenReturnMovement(){
+    void givenValidId_thenReturnMovement() {
         Movement movementRight = movementCorrect;
 
         when(repository.findById(movementRight.getIdVenda())).thenReturn(Optional.of(movementRight));
 
         Movement movementTest = service.findByMovementId(1L);
-        assertEquals(movementRight,movementTest);
+        assertEquals(movementRight, movementTest);
     }
 
     @Test
-    void givenInvalidId_thenThrowNoSuchElementException(){
+    void givenInvalidId_thenThrowNoSuchElementException() {
         doThrow(new NoSuchElementException("Invalid id")).when(repository).findById(invalidId);
 
         try {
             service.findByMovementId(invalidId);
-        }catch (NoSuchElementException e){
-            assertEquals("Invalid id",e.getMessage());
+        } catch (NoSuchElementException e) {
+            assertEquals("Invalid id", e.getMessage());
         }
     }
 
     @Test
-    void givenValidOrInvalidId_thenDeleteMovementFromDatabase(){
+    void givenValidOrInvalidId_thenDeleteMovementFromDatabase() {
         Long id = 1L;
         doNothing().when(repository).deleteById(id);
         service.cancelMovement(id);
@@ -135,36 +135,36 @@ class MovementServiceTest {
     }
 
     @Test
-    void givenRequest_thenReturnAListWithTheReports(){
+    void givenRequest_thenReturnAListWithTheReports() {
         List<Report> reportsRight = reportList;
         when(repository.makeReport()).thenReturn(reportsRight);
 
         List<Report> reportsTest = service.makeReport();
 
         assertThat(reportsTest).isNotEmpty();
-        assertIterableEquals(reportsRight,reportsTest);
+        assertIterableEquals(reportsRight, reportsTest);
     }
 
     @Test
-    void givenRequest_whenDoNotHaveMovements_thenReturnAnEmptyList(){
+    void givenRequest_whenDoNotHaveMovements_thenReturnAnEmptyList() {
         List<Report> reportsRight = new ArrayList<>();
         when(repository.makeReport()).thenReturn(reportsRight);
 
         List<Report> reportsTest = service.makeReport();
 
         assertThat(reportsTest).isEmpty();
-        assertIterableEquals(reportsRight,reportsTest);
+        assertIterableEquals(reportsRight, reportsTest);
     }
 
 
     @Test
-    void givenValidIdVendaAndValidIdComprador_whenVendedorIsNotEqualsToComprador_whenCompradorHaveMoreOrEqualsPointsToTheSkinPrice_thenReturnTrue(){
+    void givenValidIdVendaAndValidIdComprador_whenVendedorIsNotEqualsToComprador_whenCompradorHaveMoreOrEqualsPointsToTheSkinPrice_thenReturnTrue() {
         Long idVenda = 1L;
         Long idComprador = 1L;
         Movement movement = new Movement(1L, 2L, 1L, 3L, true, 7000);
         Skin skinMovement = new Skin(3L, "Dragon Blue", "AWP", 100, "Veterana", "");
-        User comprador = new User(1L,"Carlos","9090","ca@gmail",20000,null,"cliente");
-        User vendedor = new User(2L,"Administrador","admin","admin@admin.com",100000,null,"admin");
+        User comprador = new User(1L, "Carlos", "9090", "ca@gmail", 20000, null, "cliente");
+        User vendedor = new User(2L, "Administrador", "admin", "admin@admin.com", 100000, null, "admin");
 
         when(repository.findById(idVenda)).thenReturn(Optional.of(movement));
         when(skinService.findBySkinId(movement.getIdSkin())).thenReturn(skinMovement);
@@ -183,13 +183,13 @@ class MovementServiceTest {
     }
 
     @Test
-    void givenValidIdVendaAndValidIdComprador_whenVendedorIsEqualsToComprador_thenReturnFalse(){
+    void givenValidIdVendaAndValidIdComprador_whenVendedorIsEqualsToComprador_thenReturnFalse() {
         Long idVenda = 1L;
         Long idComprador = 1L;
         Movement movement = new Movement(1L, 2L, 1L, 3L, true, 7000);
         Skin skinMovement = new Skin(3L, "Dragon Blue", "AWP", 100, "Veterana", "");
-        User comprador = new User(1L,"Carlos","9090","ca@gmail",20000,null,"cliente");
-        User vendedor = new User(1L,"Carlos","9090","ca@gmail",20000,null,"cliente");
+        User comprador = new User(1L, "Carlos", "9090", "ca@gmail", 20000, null, "cliente");
+        User vendedor = new User(1L, "Carlos", "9090", "ca@gmail", 20000, null, "cliente");
 
         when(repository.findById(idVenda)).thenReturn(Optional.of(movement));
         when(skinService.findBySkinId(movement.getIdSkin())).thenReturn(skinMovement);
@@ -201,13 +201,13 @@ class MovementServiceTest {
     }
 
     @Test
-    void givenValidIdVendaAndValidIdComprador_whenVendedorIsNotEqualsToComprador_whenCompradorHaveLessPointsToTheSkinPrice_thenReturnFalse(){
+    void givenValidIdVendaAndValidIdComprador_whenVendedorIsNotEqualsToComprador_whenCompradorHaveLessPointsToTheSkinPrice_thenReturnFalse() {
         Long idVenda = 1L;
         Long idComprador = 1L;
         Movement movement = new Movement(1L, 2L, 1L, 3L, true, 7000);
         Skin skinMovement = new Skin(3L, "Dragon Blue", "AWP", 100, "Veterana", "");
-        User comprador = new User(1L,"Carlos","9090","ca@gmail",2,null,"cliente");
-        User vendedor = new User(2L,"Administrador","admin","admin@admin.com",100000,null,"admin");
+        User comprador = new User(1L, "Carlos", "9090", "ca@gmail", 2, null, "cliente");
+        User vendedor = new User(2L, "Administrador", "admin", "admin@admin.com", 100000, null, "admin");
 
         when(repository.findById(idVenda)).thenReturn(Optional.of(movement));
         when(skinService.findBySkinId(movement.getIdSkin())).thenReturn(skinMovement);
@@ -219,13 +219,12 @@ class MovementServiceTest {
     }
 
 
-
     private List<Report> getReports() {
         List<Report> reportList = new ArrayList<>();
-        reportList.add(new ReportImpl(2L,"EstoqueDinamico","Carlos","AWP Dragon Lore",true,10000));
-        reportList.add(new ReportImpl(12L,"Administrador",null,"M4A1-S Hot Rod",false,6000));
-        reportList.add(new ReportImpl(22L,"EstoqueDinamico",null,"AK-47 Vulcan",false,8000));
-        reportList.add(new ReportImpl(40L,"EstoqueEstatico",null,"MP7 Impire",false,1500));
+        reportList.add(new ReportImpl(2L, "EstoqueDinamico", "Carlos", "AWP Dragon Lore", true, 10000));
+        reportList.add(new ReportImpl(12L, "Administrador", null, "M4A1-S Hot Rod", false, 6000));
+        reportList.add(new ReportImpl(22L, "EstoqueDinamico", null, "AK-47 Vulcan", false, 8000));
+        reportList.add(new ReportImpl(40L, "EstoqueEstatico", null, "MP7 Impire", false, 1500));
         return reportList;
     }
 

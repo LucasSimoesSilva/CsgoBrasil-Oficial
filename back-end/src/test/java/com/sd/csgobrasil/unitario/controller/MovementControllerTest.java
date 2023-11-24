@@ -7,8 +7,9 @@ import com.sd.csgobrasil.entity.Movement;
 import com.sd.csgobrasil.service.MovementService;
 import com.sd.csgobrasil.service.SkinService;
 import com.sd.csgobrasil.util.ReportImpl;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -33,7 +34,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
-public class MovementControllerTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class MovementControllerTest {
 
     @MockBean
     private MovementService service;
@@ -46,21 +48,34 @@ public class MovementControllerTest {
 
     @Autowired
     private JacksonTester<List<Movement>> movementListJson;
+
     @Autowired
     private JacksonTester<Movement> movementJson;
+
     @Autowired
     private JacksonTester<Boolean> booleanJacksonTester;
+
     @Autowired
     private JacksonTester<MovementsId> movementsIdJson;
+
     @Autowired
     private JacksonTester<List<ReportImpl>> reportJson;
 
     @Autowired
     private JacksonTester<List<SkinMovement>> skinMovementListJson;
 
+
+    List<Movement> movementList;
+    Movement validMovement;
+
+    @BeforeAll
+    void beforeAll() {
+        movementList = getMovements();
+        validMovement = createMovement();
+    }
+
     @Test
-    @DisplayName("method listMovement")
-    void getEmptyListWhenHaveNotMovements() throws Exception {
+    void givenARequestGET_whenMovementRepositoryIsEmpty_thenReturnEmptyListAndStatusOK() throws Exception {
         when(service.listMovement()).thenReturn(new ArrayList<>());
 
         MockHttpServletResponse response = mvc.
@@ -72,12 +87,11 @@ public class MovementControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
-    @DisplayName("method listMovement")
     @Test
-    void getAllMovementsWhenHaveMovements() throws Exception {
-        List<Movement> movementList = getMovements();
+    void givenARequestGET_whenMovementRepositoryIsNotEmpty_thenReturnAMovementListAndStatusOK() throws Exception {
+        List<Movement> movementListRight = movementList;
 
-        when(service.listMovement()).thenReturn(movementList);
+        when(service.listMovement()).thenReturn(movementListRight);
 
         MockHttpServletResponse response = mvc.
                 perform(get("/movement/movements")).andReturn().getResponse();
@@ -85,15 +99,14 @@ public class MovementControllerTest {
         List<Movement> responseObject = movementListJson.parse(response.getContentAsString()).getObject();
 
         assertThat(responseObject).isNotEmpty();
-        assertIterableEquals(movementList,responseObject);
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertTrue(responseObject.size() > 1);
+        assertIterableEquals(movementListRight, responseObject);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
     @Test
-    @DisplayName("method listMovementSkin")
-    void getASkinMovementList() throws Exception {
-        List<Movement> movements = getMovements();
+    void givenARequestGET_whenHaveSkinsInMovement_thenReturnASkinMovementListAndStatusOk() throws Exception {
+        List<Movement> movements = movementList;
         when(service.listMovement()).thenReturn(movements);
 
         List<SkinMovement> skinMovements = getSkinMovementList();
@@ -106,15 +119,14 @@ public class MovementControllerTest {
         List<SkinMovement> responseObject = skinMovementListJson.parse(response.getContentAsString()).getObject();
 
         assertThat(responseObject).isNotEmpty();
-        assertIterableEquals(skinMovements,responseObject);
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertTrue(responseObject.size() > 1);
+        assertIterableEquals(skinMovements, responseObject);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
 
     @Test
-    @DisplayName("method listMovementSkin")
-    void getAEmptySkinMovementList() throws Exception {
+    void givenARequestGET_whenHaveNotSkinsInMovement_thenReturnEmptyListAndStatusOk() throws Exception {
         when(service.listMovement()).thenReturn(new ArrayList<>());
         when(skinService.getSkinMovements(new ArrayList<>())).thenReturn(new ArrayList<>());
 
@@ -128,9 +140,8 @@ public class MovementControllerTest {
     }
 
     @Test
-    @DisplayName("method addMovement")
-    void addValidMovement() throws Exception {
-        Movement movement = createMovement();
+    void givenARequestPOST_whenMovementIsValid_thenReturnTheMovementWithIdAndStatusCREATED() throws Exception {
+        Movement movement = validMovement;
 
         when(service.addMovement(movement)).thenReturn(movement);
 
@@ -145,13 +156,12 @@ public class MovementControllerTest {
         Movement responseObject = movementJson.parse(response.getContentAsString()).getObject();
 
         assertThat(responseObject).isNotNull();
-        assertEquals(movement,responseObject);
+        assertEquals(movement, responseObject);
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
     }
 
     @Test
-    @DisplayName("method addMovement")
-    void addInvalidMovement() throws Exception {
+    void givenARequestPOST_whenMovementIsInvalid_thenReturnStatusBadRequest() throws Exception {
         when(service.addMovement(null)).thenReturn(null);
 
         MockHttpServletResponse response = mvc
@@ -165,67 +175,64 @@ public class MovementControllerTest {
     }
 
     @Test
-    @DisplayName("method findByMovementId")
-    void returnMovementWhenIdIsValid() throws Exception {
-        Movement movement = createMovement();
+    void givenARequestGET_whenMovementIdIsValid_thenReturnAMovementWithRightId() throws Exception {
+        Movement movement = validMovement;
         when(service.findByMovementId(1L)).thenReturn(movement);
 
         MockHttpServletResponse response = mvc.
-                perform(get("/movement/{idVenda}",1L)).andReturn().getResponse();
+                perform(get("/movement/{idVenda}", 1L)).andReturn().getResponse();
 
         Movement responseObject = movementJson.parse(response.getContentAsString()).getObject();
 
         assertThat(responseObject).isNotNull();
-        assertEquals(movement,responseObject);
+        assertEquals(movement, responseObject);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
     @Test
-    @DisplayName("method findByMovementId")
-    void returnNullWhenIdIsInvalid() throws Exception {
+    void givenARequestGET_whenMovementIdIsInvalid_thenThrowNoSuchElementExceptionReturnStatusBadRequest() throws Exception {
         when(service.findByMovementId(-1L)).thenThrow(new NoSuchElementException());
 
         MockHttpServletResponse response = mvc.
-                perform(get("/movement/{idVenda}",-1L)).andReturn().getResponse();
+                perform(get("/movement/{idVenda}", -1L)).andReturn().getResponse();
 
         String messageInvalidId = "Invalid Id";
 
         assertEquals(messageInvalidId, response.getContentAsString());
-        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
-        @Test
-        @DisplayName("method makeMovement")
-        void returnAMovementStatusTrue() throws Exception {
-            Long idVenda = 1L;
-            Long idComprador = 2L;
-            MovementsId movementsId = new MovementsId(idVenda,idComprador);
-
-            when(service.makeMovement(idVenda,idComprador)).thenReturn(true);
-
-
-            MockHttpServletResponse response = mvc
-                    .perform(
-                            put("/movement")
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .content(movementsIdJson.write(movementsId).getJson())
-                    )
-                    .andReturn().getResponse();
-
-            Boolean responseObject = booleanJacksonTester.parse(response.getContentAsString()).getObject();
-
-            assertThat(responseObject).isNotNull();
-            assertTrue(responseObject);
-            assertEquals(HttpStatus.OK.value(), response.getStatus());
-        }
 
     @Test
-    @DisplayName("method makeMovement")
-    void returnBadRequestWhenIdIsInvalid() throws Exception {
+    void givenARequestPUT_whenIdsAreValid_thenReturnTrue() throws Exception {
+        Long idVenda = 1L;
+        Long idComprador = 2L;
+        MovementsId movementsId = new MovementsId(idVenda, idComprador);
+
+        when(service.makeMovement(idVenda, idComprador)).thenReturn(true);
+
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        put("/movement")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(movementsIdJson.write(movementsId).getJson())
+                )
+                .andReturn().getResponse();
+
+        Boolean responseObject = booleanJacksonTester.parse(response.getContentAsString()).getObject();
+
+        assertThat(responseObject).isNotNull();
+        assertTrue(responseObject);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+    }
+
+    @Test
+    void givenARequestPUT_whenIdsAreInvalid_thenThrowNoSuchElementExceptionAndStatusBadRequest() throws Exception {
         Long idVenda = -1L;
         Long idComprador = -2L;
-        MovementsId movementsId = new MovementsId(idVenda,idComprador);
+        MovementsId movementsId = new MovementsId(idVenda, idComprador);
 
-        when(service.makeMovement(idVenda,idComprador)).thenThrow(new NoSuchElementException());
+        when(service.makeMovement(idVenda, idComprador)).thenThrow(new NoSuchElementException());
 
 
         MockHttpServletResponse response = mvc
@@ -239,15 +246,14 @@ public class MovementControllerTest {
         String messageInvalidId = "Invalid Id";
 
         assertEquals(messageInvalidId, response.getContentAsString());
-        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
-    @DisplayName("method MakeReport")
     @Test
-    void getReportList() throws Exception {
+    void givenARequestGET_whenHaveMovements_thenReturnAReportListAndStatusOK() throws Exception {
         List<Report> reportList = new ArrayList<>();
-        reportList.add(new ReportImpl(1L,"EstoqueDinamico","Carlos","Dragon Lore",true,100));
-        reportList.add(new ReportImpl(2L,"EstoqueDinamico",null,"Dragon Flame",false,200));
+        reportList.add(new ReportImpl(1L, "EstoqueDinamico", "Carlos", "Dragon Lore", true, 100));
+        reportList.add(new ReportImpl(2L, "EstoqueDinamico", null, "Dragon Flame", false, 200));
 
         when(service.makeReport()).thenReturn(reportList);
 
@@ -257,14 +263,13 @@ public class MovementControllerTest {
         List<ReportImpl> responseObject = reportJson.parse(response.getContentAsString()).getObject();
 
         assertThat(responseObject).isNotEmpty();
-        assertIterableEquals(reportList,responseObject);
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertTrue(responseObject.size() > 1);
+        assertIterableEquals(reportList, responseObject);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
-    @DisplayName("method MakeReport")
     @Test
-    void getReportListEmpty() throws Exception {
+    void givenARequestGET_whenHaveNotMovements_thenReturnAnEmptyReportListAndStatusOK() throws Exception {
         List<Report> reportList = new ArrayList<>();
 
         when(service.makeReport()).thenReturn(reportList);
@@ -275,18 +280,17 @@ public class MovementControllerTest {
         List<ReportImpl> responseObject = reportJson.parse(response.getContentAsString()).getObject();
 
         assertThat(responseObject).isEmpty();
-        assertIterableEquals(reportList,responseObject);
+        assertIterableEquals(reportList, responseObject);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-    @DisplayName("method cancelMovement")
-    @Test
-    public void deleteValidId() throws Exception {
-        doNothing().when(service).cancelMovement(1L);
 
+    @Test
+    void givenARequestDELETE_whenIdIsValid_thenDeleteMovementFromDatabaseAndReturnStatusNoContent() throws Exception {
+        doNothing().when(service).cancelMovement(1L);
 
         MockHttpServletResponse response = mvc
                 .perform(
-                        delete("/movement/{idVenda}",1L)
+                        delete("/movement/{idVenda}", 1L)
                 )
                 .andReturn().getResponse();
 
@@ -296,23 +300,6 @@ public class MovementControllerTest {
 
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
         assertEquals("", responseMessage);
-    }
-
-    @DisplayName("method cancelMovement")
-    @Test
-    public void deleteInvalidId() throws Exception {
-        doThrow(new NoSuchElementException()).when(service).cancelMovement(0L);
-
-        MockHttpServletResponse response = mvc
-                .perform(
-                        delete("/movement/{idVenda}",0L)
-                )
-                .andReturn().getResponse();
-
-        String messageInvalidId = "Invalid Id";
-
-        assertEquals(messageInvalidId, response.getContentAsString());
-        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
     }
 
 
@@ -329,9 +316,9 @@ public class MovementControllerTest {
 
     private List<SkinMovement> getSkinMovementList() {
         List<SkinMovement> skinMovements = new ArrayList<>();
-        skinMovements.add(new SkinMovement(1L, 1L , true, "dragon",
+        skinMovements.add(new SkinMovement(1L, 1L, true, "dragon",
                 "AWP", 10, "guerra", ""));
-        skinMovements.add(new SkinMovement(2L, 1L , true, "eagle",
+        skinMovements.add(new SkinMovement(2L, 1L, true, "eagle",
                 "Pistola", 10, "guerra", ""));
         return skinMovements;
     }

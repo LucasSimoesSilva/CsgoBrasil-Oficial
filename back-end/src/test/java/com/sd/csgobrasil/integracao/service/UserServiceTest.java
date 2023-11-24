@@ -2,7 +2,6 @@ package com.sd.csgobrasil.integracao.service;
 
 import com.sd.csgobrasil.entity.DTO.UserLogin;
 import com.sd.csgobrasil.entity.DTO.UserRegister;
-import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.entity.User;
 import com.sd.csgobrasil.service.UserService;
 import jakarta.validation.ConstraintViolationException;
@@ -17,12 +16,9 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
 
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
@@ -129,7 +125,7 @@ class UserServiceTest {
     @Test
     void givenInvalidIdAndValidUser_thenCreateNewUserInDatabaseAndReturnUser() {
         User user = new User("Lucas", "123", "lucas@gmail", 1000, new ArrayList<>(), "cliente");
-        User userRight = new User(5L,"Lucas", "123", "lucas@gmail", 1000, new ArrayList<>(), "cliente");
+        User userRight = new User(5L, "Lucas", "123", "lucas@gmail", 1000, new ArrayList<>(), "cliente");
 
         User userTest = service.updateUser(-1L, user);
         assertEquals(userRight, userTest);

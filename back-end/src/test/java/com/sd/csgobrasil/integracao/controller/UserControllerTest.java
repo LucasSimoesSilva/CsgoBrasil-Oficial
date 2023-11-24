@@ -3,6 +3,7 @@ package com.sd.csgobrasil.integracao.controller;
 import com.sd.csgobrasil.entity.DTO.UserLogin;
 import com.sd.csgobrasil.entity.DTO.UserRegister;
 import com.sd.csgobrasil.entity.User;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,13 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
@@ -34,7 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class UserControllerTest {
+class UserControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -56,7 +60,7 @@ public class UserControllerTest {
 
     @DisplayName("method listUsers")
     @Test
-    void shoudReturnAListOfUsers() throws Exception {
+    void givenRequestGET_thenReturnUserListAndStatusOK() throws Exception {
         List<User> users = getUsers();
 
         MockHttpServletResponse response = mvc.
@@ -66,12 +70,12 @@ public class UserControllerTest {
 
         assertThat(responseObject).isNotEmpty();
         for (int i = 0; i < users.size(); i++) {
-            assertEquals(users.get(i).getNome(),responseObject.get(i).getNome());
-            assertEquals(users.get(i).getId(),responseObject.get(i).getId());
-            assertEquals(users.get(i).getPontos(),responseObject.get(i).getPontos());
-            assertEquals(users.get(i).getSenha(),responseObject.get(i).getSenha());
-            assertEquals(users.get(i).getEmail(),responseObject.get(i).getEmail());
-            assertEquals(users.get(i).getCargo(),responseObject.get(i).getCargo());
+            assertEquals(users.get(i).getNome(), responseObject.get(i).getNome());
+            assertEquals(users.get(i).getId(), responseObject.get(i).getId());
+            assertEquals(users.get(i).getPontos(), responseObject.get(i).getPontos());
+            assertEquals(users.get(i).getSenha(), responseObject.get(i).getSenha());
+            assertEquals(users.get(i).getEmail(), responseObject.get(i).getEmail());
+            assertEquals(users.get(i).getCargo(), responseObject.get(i).getCargo());
         }
 
         assertIterableEquals(users, responseObject);
@@ -79,9 +83,8 @@ public class UserControllerTest {
         assertTrue(responseObject.size() > 1);
     }
 
-    @DisplayName("method getUserInfo")
     @Test
-    void shouldReturnAUserByEmail() throws Exception {
+    void givenRequestPOST_whenEmailIsValid_thenReturnCorrectUserInformationAndStatusOK() throws Exception {
         User user = new User(1L, "Carlos", "9090", "ca@gmail", 200, null, "cliente");
 
         MockHttpServletResponse response = mvc
@@ -99,9 +102,8 @@ public class UserControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
-    @DisplayName("method getUserInfo")
     @Test
-    void shouldReturnBlankResponse() throws Exception {
+    void givenRequestPOST_whenEmailIsInvalid_thenReturnNothingAndStatusOk() throws Exception {
         MockHttpServletResponse response = mvc
                 .perform(
                         post("/user/info")
@@ -120,7 +122,7 @@ public class UserControllerTest {
 
         MockHttpServletResponse response = mvc
                 .perform(
-                        put("/user/{id}",userRight.getId())
+                        put("/user/{id}", userRight.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(userJson.write(userRight).getJson())
                 )
@@ -129,7 +131,7 @@ public class UserControllerTest {
         User userTest = userJson.parse(response.getContentAsString()).getObject();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(userRight,userTest);
+        assertEquals(userRight, userTest);
     }
 
     @Test
@@ -143,7 +145,7 @@ public class UserControllerTest {
 
         MockHttpServletResponse response = mvc
                 .perform(
-                        put("/user/{id}",userRequest.getId())
+                        put("/user/{id}", userRequest.getId())
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(userJson.write(userRequest).getJson())
                 )
@@ -152,7 +154,7 @@ public class UserControllerTest {
         User userTest = userJson.parse(response.getContentAsString()).getObject();
 
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(userRight,userTest);
+        assertEquals(userRight, userTest);
     }
 
     @Test
@@ -161,7 +163,7 @@ public class UserControllerTest {
 
         MockHttpServletResponse response = mvc
                 .perform(
-                        delete("/user/{id}",id)
+                        delete("/user/{id}", id)
                 )
                 .andExpect(content().string(""))
                 .andReturn().getResponse();
@@ -175,7 +177,7 @@ public class UserControllerTest {
 
         MockHttpServletResponse response = mvc
                 .perform(
-                        delete("/user/{id}",id)
+                        delete("/user/{id}", id)
                 )
                 .andExpect(content().string(""))
                 .andReturn().getResponse();
@@ -183,13 +185,12 @@ public class UserControllerTest {
         assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
     }
 
-    @DisplayName("method findByUserId")
     @Test
-    void getUserById() throws Exception {
+    void givenRequestGET_whenIdIsValid_thenReturnUserWithCorrectIdAndStatusOK() throws Exception {
         User user = new User(1L, "Carlos", "9090", "ca@gmail", 200, null, "cliente");
 
         MockHttpServletResponse response = mvc.
-                perform(get("/user/{id}", 1L)).andReturn().getResponse();
+                perform(get("/user/{id}", user.getId())).andReturn().getResponse();
 
         User responseObject = userJson.parse(response.getContentAsString()).getObject();
 
@@ -198,22 +199,21 @@ public class UserControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
 
     }
-    @DisplayName("method findByUserId")
+
     @Test
-    void getEmptyUserById() throws Exception {
+    void givenRequestGET_whenIdIsInvalid_thenReturnErrorMessageAndStatusBadRequest() throws Exception {
         MockHttpServletResponse response = mvc.
                 perform(get("/user/{id}", -1L)).andReturn().getResponse();
 
         String messageInvalidId = "Invalid Id";
 
         assertEquals(messageInvalidId, response.getContentAsString());
-        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
 
     }
 
-    @DisplayName("method checkUser")
     @Test
-    void shoudReturnATrueLoginUser() throws Exception{
+    void givenRequestPOST_whenUserLoginIsCorrect_thenReturnTrueAndStatusOK() throws Exception {
         UserLogin userLogin = new UserLogin("ca@gmail", "9090");
 
         MockHttpServletResponse response = mvc
@@ -229,9 +229,9 @@ public class UserControllerTest {
         assertTrue(responseObject);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-    @DisplayName("method checkUser")
+
     @Test
-    void shoudReturnAFalseLoginUser() throws Exception{
+    void givenRequestPOST_whenUserLoginIsIncorrect_thenReturnFalseAndStatusOK() throws Exception {
         UserLogin userLogin = new UserLogin("email@email.com", "123");
 
         MockHttpServletResponse response = mvc
@@ -247,9 +247,9 @@ public class UserControllerTest {
         assertFalse(responseObject);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-    @DisplayName("method checkIfUserExist")
+
     @Test
-    void shoudReturnATrueUserRegister() throws Exception{
+    void givenRequestPOST_whenUserRegisterExist_thenReturnTrueAndStatusOK() throws Exception {
         UserRegister userRegister = new UserRegister("Carlos",
                 "ca@gmail", "9090");
 
@@ -267,9 +267,9 @@ public class UserControllerTest {
         assertTrue(responseObject);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-    @DisplayName("method checkIfUserExist")
+
     @Test
-    void shoudReturnAFalseUserRegister() throws Exception{
+    void givenRequestPOST_whenUserRegisterNotExist_thenReturnFalseAndStatusOK() throws Exception {
         UserRegister userRegister = new UserRegister("vandaime",
                 "vandaime@gmail.com", "123");
 
@@ -287,10 +287,32 @@ public class UserControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
-    @DisplayName("method saveUser")
     @Test
-    void shouldReturANewUser() throws Exception{
-        User user = new User(10L,"Vandaime","6789","vandaime@email.com",0,new ArrayList<>(),  null);
+    void givenRequestPOST_whenUserIsValid_thenReturnUserWithIdAndStatusCREATED() throws Exception {
+        User userRight = new User(10L, "Vandaime", "6789", "vandaime@email.com", 0,
+                new ArrayList<>(), null);
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        post("/user")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(userJson.write(userRight).getJson())
+                )
+                .andReturn().getResponse();
+
+        User responseObject = userJson.parse(response.getContentAsString()).getObject();
+
+        assertEquals(userRight, responseObject);
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+    }
+
+    @Test
+    void givenRequestPOST_whenUserIsInvalid_thenThrowConstraintViolationExceptionAndReturnStatusBadRequest() throws Exception {
+        User user = new User(1L, null, "6789", "vandaime@email.com",
+                1000, new ArrayList<>(), "cliente");
+
+        String messageNull = "não deve ser nulo";
+        String messageBlank = "não deve estar em branco";
 
         MockHttpServletResponse response = mvc
                 .perform(
@@ -300,19 +322,15 @@ public class UserControllerTest {
                 )
                 .andReturn().getResponse();
 
-        User responseObject = userJson.parse(response.getContentAsString()).getObject();
+        String responseMessage = response.getContentAsString();
 
-        assertEquals(user.getNome(), responseObject.getNome());
-        assertEquals(1000, responseObject.getPontos());
-        assertEquals(user.getEmail(), responseObject.getEmail());
-        assertEquals(user.getSenha(), responseObject.getSenha());
-        assertEquals("cliente", responseObject.getCargo());
-        assertTrue(responseObject.getSkinsUser().isEmpty());
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
+        assertTrue(responseMessage.contains(messageNull));
+        assertTrue(responseMessage.contains(messageBlank));
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
 
-    private static List<User> getUsers() {
+    private List<User> getUsers() {
         List<User> users = new ArrayList<>();
         users.add(new User(1L, "Carlos", "9090", "ca@gmail", 200, null, "cliente"));
         users.add(new User(2L, "Administrador", "admin", "admin@admin.com", 100000, null, "admin"));

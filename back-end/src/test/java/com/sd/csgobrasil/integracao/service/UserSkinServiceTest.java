@@ -1,11 +1,9 @@
 package com.sd.csgobrasil.integracao.service;
 
 import com.sd.csgobrasil.entity.DTO.SkinWithState;
-import com.sd.csgobrasil.entity.DTO.UserSkin;
 import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.service.UserSkinService;
 import com.sd.csgobrasil.util.SkinWithStateImpl;
-import com.sd.csgobrasil.util.UserSkinImpl;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -17,12 +15,9 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 
 @AutoConfigureTestDatabase
 @ActiveProfiles("test")
@@ -44,7 +39,7 @@ class UserSkinServiceTest {
 
         List<Skin> skins = service.listSkinsFromUser(userIdAddSkin);
 
-        Skin skin = getSkinId1();
+        Skin skin = getSkin();
 
         assertTrue(skins.contains(skin));
     }
@@ -85,7 +80,7 @@ class UserSkinServiceTest {
     void givenSkinIdAndUserId_thenDeleteSkinFromUser() {
         Long skinsPossuidasId = 1L;
         Long userId = -1L;
-        Skin skin = getSkinId1();
+        Skin skin = getSkin();
 
         service.deleteSkinFromUser(skinsPossuidasId, userId);
 
@@ -97,7 +92,7 @@ class UserSkinServiceTest {
     void givenSkinIdAndUserId_whenSkinIdIsInvalid_thenDoNotDeleteSkinFromUser() {
         Long skinsPossuidasId = -1L;
         Long userId = 1L;
-        Skin skin = getSkinId1();
+        Skin skin = getSkin();
 
         service.deleteSkinFromUser(skinsPossuidasId, userId);
 
@@ -147,9 +142,6 @@ class UserSkinServiceTest {
             assertEquals(skinWithStateListRight.get(i).getEstadoVenda(), skinWithStateListTest.get(i).getEstadoVenda());
             assertEquals(skinWithStateListRight.get(i).getIdVenda(), skinWithStateListTest.get(i).getIdVenda());
         }
-
-
-
     }
 
     @Test
@@ -163,12 +155,12 @@ class UserSkinServiceTest {
 
     private List<Skin> getSkins() {
         List<Skin> skins = new ArrayList<>();
-        skins.add(getSkinId1());
+        skins.add(getSkin());
         skins.add(new Skin(3L, "Cyrex", "M4A1-S", 7000, "Minimal Wear", "M4A1-S_Cyrex.png"));
         return skins;
     }
 
-    private static Skin getSkinId1() {
+    private Skin getSkin() {
         return new Skin(1L, "Dragon Lore", "AWP", 10000, "Factory New",
                 "AWP_Dragon_Lore.png");
 

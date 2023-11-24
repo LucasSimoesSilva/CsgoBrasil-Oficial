@@ -26,8 +26,8 @@ class MovementRepositoryTest {
     MovementRepository repository;
 
     @Test
-    void checkReportFromMovementReturnTheBuyerAndSellingStateTrue(){
-        List<String> nomeCompradorList = new ArrayList<>(List.of("Carlos","Administrador"));
+    void givenRequest_whenEstadoVendaIsTrue_theReturnVendedorAndComprador() {
+        List<String> nomeCompradorList = new ArrayList<>(List.of("Carlos", "Administrador"));
         List<String> nomeVendedorList = new ArrayList<>(List.of("EstoqueDinamico"));
 
         List<Report> reports = repository.makeReport();
@@ -41,9 +41,9 @@ class MovementRepositoryTest {
     }
 
     @Test
-    void checkReportFromMovementReturnNullToBuyerAndSellingStateFalse(){
-        List<String> nomeVendedorList = new ArrayList<>(List.of("EstoqueDinamico","EstoqueEstatico"
-                ,"Administrador","Carlos"));
+    void givenRequest_whenEstadoVendaIsFalse_thenReturnNullToCompradorAndNormalToVendedor() {
+        List<String> nomeVendedorList = new ArrayList<>(List.of("EstoqueDinamico", "EstoqueEstatico"
+                , "Administrador", "Carlos"));
 
         List<Report> reports = repository.makeReport();
 

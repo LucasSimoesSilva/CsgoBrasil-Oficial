@@ -3,7 +3,6 @@ package com.sd.csgobrasil.unitario.controller;
 import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.service.SkinService;
 import jakarta.validation.ConstraintViolationException;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.json.AutoConfigureJsonTesters;
@@ -32,7 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureJsonTesters
-public class SkinControllerTest {
+class SkinControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -45,11 +44,8 @@ public class SkinControllerTest {
     @Autowired
     private JacksonTester<Skin> skinJson;
 
-    @DisplayName("method listSkins")
     @Test
-    public void getControllerReturnSkins() throws Exception {
-        Skin skin = new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", "");
-
+    void givenRequestGET_thenReturnSkinListAndStatusOK() throws Exception {
         List<Skin> skins = getSkins();
 
         when(service.listSkins()).thenReturn(skins);
@@ -60,45 +56,43 @@ public class SkinControllerTest {
         List<Skin> responseObject = skinListJson.parse(response.getContentAsString()).getObject();
 
         assertThat(responseObject).isNotEmpty();
-        assertEquals(skin.getNome(), responseObject.get(0).getNome());
-        assertEquals(skin.getPreco(), responseObject.get(0).getPreco());
-        assertEquals(skin.getRaridade(), responseObject.get(0).getRaridade());
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertTrue(responseObject.size() > 1);
+        assertEquals(skins, responseObject);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
-    @DisplayName("method listSkins")
     @Test
-    public void getControllerReturnEmptySkinIfDoNotHaveSkin() throws Exception {
+    void givenRequestGET_whenHaveNotSkins_thenReturnEmptySkinListAndStatusOK() throws Exception {
+        String expectedResponse = "[]";
         when(service.listSkins()).thenReturn(new ArrayList<>());
 
         MockHttpServletResponse response = mvc.
                 perform(get("/skin/skins")).andReturn().getResponse();
 
-        assertThat(response.getContentAsString()).isEqualTo("[]");
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(expectedResponse, response.getContentAsString());
     }
-    @DisplayName("method findBySkinId")
+
     @Test
-    public void getControllerReturnSkinByID() throws Exception {
+    void givenRequestGET_whenIdIsValid_thenReturnSkinWithCorrectIdAndStatusOK() throws Exception {
         Long id = 1L;
 
         Skin skin = new Skin(id, "Dragon Lore", "AWP", 100, "Nova de Guerra", "");
 
         when(service.findBySkinId(id)).thenReturn(skin);
+
         MockHttpServletResponse response = mvc.
                 perform(get("/skin/{id}", id)).andReturn().getResponse();
+
         Skin skinResponse = skinJson.parse(response.getContentAsString()).getObject();
 
-
-        assertEquals(skin.getNome(), skinResponse.getNome());
-        assertEquals(skin.getPreco(), skinResponse.getPreco());
-        assertEquals(skin.getRaridade(), skinResponse.getRaridade());
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertNotNull(skinResponse);
+        assertEquals(skin, skinResponse);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-    @DisplayName("method findBySkinId")
+
     @Test
-    public void getControllerReturnBadRequestWhenIdIsNotValid() throws Exception {
+    void givenRequestGET_whenIdIsInvalid_thenThrowNoSuchElementExceptionAndReturnStatusBadRequestAndAErrorMessage() throws Exception {
         when(service.findBySkinId(0L)).thenThrow(new NoSuchElementException());
 
         MockHttpServletResponse response = mvc.
@@ -107,11 +101,11 @@ public class SkinControllerTest {
         String messageInvalidId = "Invalid Id";
 
         assertEquals(messageInvalidId, response.getContentAsString());
-        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
-    @DisplayName("method saveSkin")
+
     @Test
-    public void postSaveSkinValid() throws Exception {
+    void givenRequestPOSTAndSkin_thenReturnSkinWithIdAndStatusCREATED() throws Exception {
         Skin skin = new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", "");
 
         when(service.addSkin(any(Skin.class))).thenReturn(skin);
@@ -126,16 +120,14 @@ public class SkinControllerTest {
 
         Skin skinResponse = skinJson.parse(response.getContentAsString()).getObject();
 
-        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        assertEquals(skin.getNome(), skinResponse.getNome());
-        assertEquals(skin.getPreco(),skinResponse.getPreco());
-        assertEquals(skin.getRaridade(), skinResponse.getRaridade());
         assertNotNull(skinResponse);
+        assertEquals(skin, skinResponse);
+        assertEquals(HttpStatus.CREATED.value(), response.getStatus());
 
     }
-    @DisplayName("method saveSkin")
+
     @Test
-    void postDoNotSaveInvalidSkin() throws Exception {
+    void givenRequestPOSTAndSkin_whenSkinIsInvalid_thenThrowConstraintViolationExceptionAndReturnStatusBadRequest() throws Exception {
         Skin skin = new Skin(1L, null, "AWP", 100, "Nova de Guerra", "");
 
         when(service.addSkin(any(Skin.class))).thenThrow(new ConstraintViolationException(new HashSet<>()));
@@ -150,20 +142,19 @@ public class SkinControllerTest {
 
         String responseMessage = response.getContentAsString();
 
+        assertEquals("", responseMessage);
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        assertEquals("",responseMessage);
     }
 
-    @DisplayName("method updateSkin")
     @Test
-    public void putUpdateValidObject() throws Exception {
+    void givenRequestPUTAndSkin_thenReturnSkinUpdated() throws Exception {
         Skin skin = new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", "");
 
-        when(service.updateSkin(eq(1L),any(Skin.class))).thenReturn(skin);
+        when(service.updateSkin(eq(1L), any(Skin.class))).thenReturn(skin);
 
         MockHttpServletResponse response = mvc
                 .perform(
-                        put("/skin/{id}",1L)
+                        put("/skin/{id}", 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(skinJson.write(skin).getJson())
                 )
@@ -171,22 +162,20 @@ public class SkinControllerTest {
 
         Skin skinResponse = skinJson.parse(response.getContentAsString()).getObject();
 
-        assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(skin.getNome(), skinResponse.getNome());
-        assertEquals(skin.getPreco(),skinResponse.getPreco());
-        assertEquals(skin.getRaridade(), skinResponse.getRaridade());
         assertNotNull(skinResponse);
+        assertEquals(skin, skinResponse);
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
-    @DisplayName("method updateSkin")
+
     @Test
-    public void putUpdateInvalidObject() throws Exception {
+    void givenRequestPUTAndSkin_whenSkinIsInvalid_thenThrowConstraintViolationExceptionReturnStatusBadRequest() throws Exception {
         Skin skin = new Skin(1L, null, "AWP", 100, "Nova de Guerra", "");
 
-        when(service.updateSkin(eq(1L),any(Skin.class))).thenThrow(new ConstraintViolationException(new HashSet<>()));
+        when(service.updateSkin(eq(1L), any(Skin.class))).thenThrow(new ConstraintViolationException(new HashSet<>()));
 
         MockHttpServletResponse response = mvc
                 .perform(
-                        put("/skin/{id}",1L)
+                        put("/skin/{id}", 1L)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(skinJson.write(skin).getJson())
                 )
@@ -194,14 +183,12 @@ public class SkinControllerTest {
 
         String responseMessage = response.getContentAsString();
 
+        assertEquals("", responseMessage);
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
-        assertEquals("",responseMessage);
     }
 
-
-    @DisplayName("method deleteSkin")
     @Test
-    void givenValidId_whenHaveUserWithTheSkin_thenThrowExceptionDataIntegrityViolationException() throws Exception {
+    void givenRequestDELETEValidId_whenHaveUserWithTheSkin_thenThrowExceptionDataIntegrityViolationException() throws Exception {
         String messageErrorCheck = "REFERENCES PUBLIC.SKIN(ID)";
 
         doThrow(new DataIntegrityViolationException("Error in REFERENCES PUBLIC.SKIN(ID)"))
@@ -209,24 +196,23 @@ public class SkinControllerTest {
 
         MockHttpServletResponse response = mvc
                 .perform(
-                        delete("/skin/{id}",1L)
+                        delete("/skin/{id}", 1L)
                 )
                 .andReturn().getResponse();
 
         String responseMessage = response.getContentAsString();
 
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertTrue(responseMessage.contains(messageErrorCheck));
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
-    @DisplayName("method deleteSkin")
     @Test
-    public void deleteValidId() throws Exception {
+    void givenRequestDELETE_whenIdIsValid_thenReturnStatusNoContent() throws Exception {
         doNothing().when(service).deleteSkin(1L);
 
         MockHttpServletResponse response = mvc
                 .perform(
-                        delete("/skin/{id}",1L)
+                        delete("/skin/{id}", 1L)
                 )
                 .andReturn().getResponse();
 
@@ -234,36 +220,31 @@ public class SkinControllerTest {
 
         String responseMessage = response.getContentAsString();
 
-        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
         assertEquals("", responseMessage);
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
     }
-    @DisplayName("method deleteSkin")
+
     @Test
-    public void deleteInvalidId() throws Exception {
+    void givenRequestDELETE_whenIdIsInvalid_thenThrowNoSuchElementException() throws Exception {
         doThrow(new NoSuchElementException()).when(service).deleteSkin(0L);
 
         MockHttpServletResponse response = mvc
                 .perform(
-                        delete("/skin/{id}",0L)
+                        delete("/skin/{id}", 0L)
                 )
                 .andReturn().getResponse();
 
         String messageInvalidId = "Invalid Id";
 
         assertEquals(messageInvalidId, response.getContentAsString());
-        assertEquals(HttpStatus.BAD_REQUEST.value(),response.getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
-
-
-
-    private static List<Skin> getSkins() {
+    private List<Skin> getSkins() {
         List<Skin> skins = new ArrayList<>();
         skins.add(new Skin(1L, "Dragon Lore", "AWP", 100, "Nova de Guerra", ""));
         skins.add(new Skin(2L, "Dragon Red", "Pistol", 100, "Velha de Guerra", ""));
         skins.add(new Skin(3L, "Dragon Blue", "AWP", 100, "Veterana", ""));
         return skins;
     }
-
-
 }

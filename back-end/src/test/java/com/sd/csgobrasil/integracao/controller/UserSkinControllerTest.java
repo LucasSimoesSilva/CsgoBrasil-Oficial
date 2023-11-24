@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest
-public class UserSkinControllerTest {
+class UserSkinControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -49,29 +49,28 @@ public class UserSkinControllerTest {
 
 
     @Test
-    void whenValidUserId_thenReturnSkinListWithStates() throws Exception {
+    void givenRequestGET_whenValidUserId_thenReturnSkinListWithStates() throws Exception {
         List<SkinWithStateImpl> listSkins = getSkinWithStates();
-
 
         ResponseEntity<List<SkinWithState>> response = controller.listSkinsWithState(1L);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertThat(response.getBody()).isNotEmpty();
-        assertEquals(2,response.getBody().size());
+        assertEquals(2, response.getBody().size());
         for (int i = 0; i < response.getBody().size(); i++) {
-            assertEquals(listSkins.get(i).getIdSkin(),response.getBody().get(i).getIdSkin());
-            assertEquals(listSkins.get(i).getNome(),response.getBody().get(i).getNome());
-            assertEquals(listSkins.get(i).getArma(),response.getBody().get(i).getArma());
-            assertEquals(listSkins.get(i).getPreco(),response.getBody().get(i).getPreco());
-            assertEquals(listSkins.get(i).getRaridade(),response.getBody().get(i).getRaridade());
-            assertEquals(listSkins.get(i).getImagem(),response.getBody().get(i).getImagem());
-            assertEquals(listSkins.get(i).getEstadoVenda(),response.getBody().get(i).getEstadoVenda());
-            assertEquals(listSkins.get(i).getIdVenda(),response.getBody().get(i).getIdVenda());
+            assertEquals(listSkins.get(i).getIdSkin(), response.getBody().get(i).getIdSkin());
+            assertEquals(listSkins.get(i).getNome(), response.getBody().get(i).getNome());
+            assertEquals(listSkins.get(i).getArma(), response.getBody().get(i).getArma());
+            assertEquals(listSkins.get(i).getPreco(), response.getBody().get(i).getPreco());
+            assertEquals(listSkins.get(i).getRaridade(), response.getBody().get(i).getRaridade());
+            assertEquals(listSkins.get(i).getImagem(), response.getBody().get(i).getImagem());
+            assertEquals(listSkins.get(i).getEstadoVenda(), response.getBody().get(i).getEstadoVenda());
+            assertEquals(listSkins.get(i).getIdVenda(), response.getBody().get(i).getIdVenda());
         }
     }
 
     @Test
-    void whenInvalidUserId_thenReturnEmptyListWithState() throws Exception {
+    void givenRequestGET_whenInvalidUserId_thenReturnEmptyListWithState() throws Exception {
         MockHttpServletResponse response = mvc.
                 perform(get("/userskin/skinsState/{idUser}", -1L)).andReturn().getResponse();
 
@@ -82,7 +81,7 @@ public class UserSkinControllerTest {
     }
 
     @Test
-    void whenValidUserId_thenReturnSkinList() throws Exception {
+    void givenRequestGET_whenValidUserId_thenReturnSkinList() throws Exception {
         List<Skin> skinList = getSkins();
 
         MockHttpServletResponse response = mvc.
@@ -90,13 +89,13 @@ public class UserSkinControllerTest {
 
         List<Skin> responseObject = skinsListJson.parse(response.getContentAsString()).getObject();
 
-        assertIterableEquals(skinList,responseObject);
+        assertIterableEquals(skinList, responseObject);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertEquals(2, responseObject.size());
     }
 
     @Test
-    void whenInvalidUserId_thenReturnEmptyList() throws Exception {
+    void givenRequestGET_whenInvalidUserId_thenReturnEmptyList() throws Exception {
         MockHttpServletResponse response = mvc.
                 perform(get("/userskin/{idUser}", -1L)).andReturn().getResponse();
 

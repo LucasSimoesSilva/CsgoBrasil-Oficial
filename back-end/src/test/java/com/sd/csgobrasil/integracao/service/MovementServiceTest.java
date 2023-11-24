@@ -32,7 +32,7 @@ class MovementServiceTest {
     MovementService service;
 
     @Test
-    void givenRequest_thenReturnAMovementList(){
+    void givenRequest_thenReturnAMovementList() {
         List<Movement> movementsRight = getMovements();
 
         List<Movement> movementsTest = service.listMovement();
@@ -44,90 +44,90 @@ class MovementServiceTest {
     }
 
     @Test
-    void givenMovement_thenAddMovementToDatabaseAndReturnMovementWithId(){
-        Movement movement = new Movement(3L,3L,false,8000);
+    void givenMovement_thenAddMovementToDatabaseAndReturnMovementWithId() {
+        Movement movement = new Movement(3L, 3L, false, 8000);
 
         Movement movementRight = new Movement(42L, 3L, 1L, 3L, false, 7000);
 
         Movement movementTest = service.addMovement(movement);
-        assertEquals(movementRight,movementTest);
+        assertEquals(movementRight, movementTest);
     }
 
     @Test
-    void givenMovement_whenMovementIsInvalid_thenThrowConstraintViolationException(){
+    void givenMovement_whenMovementIsInvalid_thenThrowConstraintViolationException() {
         Movement movementInvalid = new Movement(42L, null, 1L, 3L,
                 false, 7000);
 
         try {
             service.addMovement(movementInvalid);
-        }catch (ConstraintViolationException e){
+        } catch (ConstraintViolationException e) {
             assertTrue(e.getMessage().contains("'não deve ser nulo'"));
         }
     }
 
     @Test
-    void givenValidIdAndValidMovement_thenUpdateMovementInDatabaseAndReturnMovement(){
+    void givenValidIdAndValidMovement_thenUpdateMovementInDatabaseAndReturnMovement() {
         Movement movementRight = new Movement(1L, 3L, 1L, 3L, false, 100);
 
         Movement movementTest = service.updateM(movementRight);
-        assertEquals(movementRight,movementTest);
+        assertEquals(movementRight, movementTest);
     }
 
     @Test
-    void givenInvalidMovementId_thenCreateMovementInDatabaseAndReturnMovementCreated(){
+    void givenInvalidMovementId_thenCreateMovementInDatabaseAndReturnMovementCreated() {
         Movement movementRight = new Movement(-1L, 3L, 1L, 3L, false, 100);
 
         Movement movementTest = service.updateM(movementRight);
         movementRight.setIdVenda(42L);
 
         assertNotNull(movementTest);
-        assertEquals(movementRight,movementTest);
+        assertEquals(movementRight, movementTest);
     }
 
     @Test
-    void givenValidId_thenReturnMovement(){
+    void givenValidId_thenReturnMovement() {
         Movement movementRight = new Movement(1L, 3L, 1L, 3L, true, 7000);
 
         Movement movementTest = service.findByMovementId(1L);
-        assertEquals(movementRight,movementTest);
+        assertEquals(movementRight, movementTest);
     }
 
     @Test
-    void givenInvalidId_thenThrowNoSuchElementException(){
+    void givenInvalidId_thenThrowNoSuchElementException() {
         String errorMessage = "No value present";
         try {
             service.findByMovementId(-1L);
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             assertTrue(e.getMessage().contains(errorMessage));
         }
     }
 
     @Test
-    void givenValidId_thenDeleteMovementFromDatabase(){
+    void givenValidId_thenDeleteMovementFromDatabase() {
         Long id = 1L;
         service.cancelMovement(id);
 
         String errorMessage = "No value present";
         try {
             service.findByMovementId(id);
-        }catch (NoSuchElementException e){
-            assertEquals(errorMessage,e.getMessage());
+        } catch (NoSuchElementException e) {
+            assertEquals(errorMessage, e.getMessage());
         }
     }
 
     @Test
-    void givenInvalidId_whenTryToDeleteMovement_thenThrowNoSuchElementException(){
+    void givenInvalidId_whenTryToDeleteMovement_thenThrowNoSuchElementException() {
         Long id = -1L;
         String errorMessage = "No value present";
         try {
             service.cancelMovement(id);
-        }catch (NoSuchElementException e){
-            assertEquals(errorMessage,e.getMessage());
+        } catch (NoSuchElementException e) {
+            assertEquals(errorMessage, e.getMessage());
         }
     }
 
     @Test
-    void givenRequest_thenReturnAListWithTheReports(){
+    void givenRequest_thenReturnAListWithTheReports() {
         List<Report> reportsRight = getReports();
 
         List<Report> reportsTest = service.makeReport();
@@ -145,7 +145,7 @@ class MovementServiceTest {
     }
 
     @Test
-    void givenValidIdVendaAndValidIdComprador_whenVendedorIsNotEqualsToComprador_whenCompradorHaveMoreOrEqualsPointsToTheSkinPrice_thenReturnTrue(){
+    void givenValidIdVendaAndValidIdComprador_whenVendedorIsNotEqualsToComprador_whenCompradorHaveMoreOrEqualsPointsToTheSkinPrice_thenReturnTrue() {
         Long idVenda = 41L;
         Long idComprador = 2L;
 
@@ -154,7 +154,7 @@ class MovementServiceTest {
     }
 
     @Test
-    void givenValidIdVendaAndValidIdComprador_whenVendedorIsEqualsToComprador_thenReturnFalse(){
+    void givenValidIdVendaAndValidIdComprador_whenVendedorIsEqualsToComprador_thenReturnFalse() {
         Long idVenda = 41L;
         Long idComprador = 4L;
 
@@ -163,7 +163,7 @@ class MovementServiceTest {
     }
 
     @Test
-    void givenValidIdVendaAndValidIdComprador_whenVendedorIsNotEqualsToComprador_whenCompradorHaveLessPointsToTheSkinPrice_thenReturnFalse(){
+    void givenValidIdVendaAndValidIdComprador_whenVendedorIsNotEqualsToComprador_whenCompradorHaveLessPointsToTheSkinPrice_thenReturnFalse() {
         Long idVenda = 37L;
         Long idComprador = 1L;
 
@@ -173,14 +173,14 @@ class MovementServiceTest {
 
     private List<Report> getReports() {
         List<Report> reportList = new ArrayList<>();
-        reportList.add(new ReportImpl(1L,"EstoqueDinamico","Carlos",
-                "M4A1-S Cyrex",true,7000));
-        reportList.add(new ReportImpl(2L,"EstoqueDinamico","Carlos",
-                "AWP Dragon Lore",true,10000));
-        reportList.add(new ReportImpl(3L,"EstoqueDinamico","Administrador",
-                "M4A1-S Hot Rod",true,6000));
-        reportList.add(new ReportImpl(4L,"EstoqueDinamico","Administrador",
-                "SCAR-20 Bloodsport",true,1000));
+        reportList.add(new ReportImpl(1L, "EstoqueDinamico", "Carlos",
+                "M4A1-S Cyrex", true, 7000));
+        reportList.add(new ReportImpl(2L, "EstoqueDinamico", "Carlos",
+                "AWP Dragon Lore", true, 10000));
+        reportList.add(new ReportImpl(3L, "EstoqueDinamico", "Administrador",
+                "M4A1-S Hot Rod", true, 6000));
+        reportList.add(new ReportImpl(4L, "EstoqueDinamico", "Administrador",
+                "SCAR-20 Bloodsport", true, 1000));
         return reportList;
     }
 

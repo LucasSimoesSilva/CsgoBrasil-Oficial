@@ -41,7 +41,7 @@ class UserSkinControllerTest {
     private JacksonTester<List<Skin>> skinsListJson;
 
     @Test
-    void whenValidUserId_thenReturnSkinListWithStates() throws Exception {
+    void givenRequestGET_whenValidUserId_thenReturnSkinListWithStates() throws Exception {
         List<SkinWithState> listSkins = getSkinWithStates();
 
         when(service.listSkinsWithStateFromUser(1L)).thenReturn(listSkins);
@@ -51,13 +51,13 @@ class UserSkinControllerTest {
 
         List<SkinWithStateImpl> responseObject = skinsWithStateListJson.parse(response.getContentAsString()).getObject();
 
-        assertIterableEquals(listSkins,responseObject);
+        assertIterableEquals(listSkins, responseObject);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertTrue(responseObject.size() > 1);
     }
 
     @Test
-    void whenInvalidUserId_thenReturnEmptyListWithState() throws Exception {
+    void givenRequestGET_whenInvalidUserId_thenReturnEmptyListWithState() throws Exception {
         when(service.listSkinsWithStateFromUser(-1L)).thenReturn(new ArrayList<>());
 
         MockHttpServletResponse response = mvc.
@@ -70,7 +70,7 @@ class UserSkinControllerTest {
     }
 
     @Test
-    void whenValidUserId_thenReturnSkinList() throws Exception {
+    void givenRequestGET_whenValidUserId_thenReturnSkinList() throws Exception {
         List<Skin> skinList = getSkins();
 
         when(service.listSkinsFromUser(1L)).thenReturn(skinList);
@@ -80,13 +80,13 @@ class UserSkinControllerTest {
 
         List<Skin> responseObject = skinsListJson.parse(response.getContentAsString()).getObject();
 
-        assertIterableEquals(skinList,responseObject);
+        assertIterableEquals(skinList, responseObject);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertTrue(responseObject.size() > 1);
     }
 
     @Test
-    void whenInvalidUserId_thenReturnEmptyList() throws Exception {
+    void givenRequestGET_whenInvalidUserId_thenReturnEmptyList() throws Exception {
         when(service.listSkinsFromUser(-1L)).thenReturn(new ArrayList<>());
 
         MockHttpServletResponse response = mvc.

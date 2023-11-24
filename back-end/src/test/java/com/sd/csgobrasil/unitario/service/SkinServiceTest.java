@@ -44,82 +44,82 @@ class SkinServiceTest {
     }
 
     @Test
-    void givenRequest_thenReturnAList(){
+    void givenRequest_thenReturnAList() {
         when(repository.findAll()).thenReturn(skinList);
         List<Skin> skinsTest = service.listSkins();
-        assertEquals(skinList,skinsTest);
+        assertEquals(skinList, skinsTest);
     }
 
     @Test
-    void givenRequest_thenReturnAnEmptyList(){
+    void givenRequest_thenReturnAnEmptyList() {
         List<Skin> emptyList = new ArrayList<>();
         when(repository.findAll()).thenReturn(emptyList);
         List<Skin> skinsTest = service.listSkins();
 
         assertThat(skinsTest).isEmpty();
-        assertEquals(emptyList,skinsTest);
+        assertEquals(emptyList, skinsTest);
     }
 
     @Test
-    void givenValidSkin_thenReturnTheSkinWithId(){
+    void givenValidSkin_thenReturnTheSkinWithId() {
         Skin skin = incompleteSkin;
-        Skin skinRight = new Skin(1L,"Dragao","AWP",100,"Nova","");
+        Skin skinRight = new Skin(1L, "Dragao", "AWP", 100, "Nova", "");
 
         when(repository.save(skin)).thenReturn(skinRight);
         Skin skinTest = service.addSkin(skin);
 
         assertNotNull(skinTest);
-        assertEquals(skinRight,skinTest);
+        assertEquals(skinRight, skinTest);
     }
 
     @Test
-    void givenInvalidIdSkin_thenCreateNewSkinInDatabaseAndReturnSkin(){
+    void givenInvalidIdSkin_thenCreateNewSkinInDatabaseAndReturnSkin() {
         Skin skin = incompleteSkin;
-        Skin skinRight = new Skin(5L,"Dragao","AWP",100,"Nova","");
+        Skin skinRight = new Skin(5L, "Dragao", "AWP", 100, "Nova", "");
         Long idInvalid = invalidId;
 
         when(repository.save(skin)).thenReturn(skinRight);
-        Skin skinTest = service.updateSkin(idInvalid,skin);
+        Skin skinTest = service.updateSkin(idInvalid, skin);
 
         assertNotNull(skinTest);
-        assertEquals(skinRight,skinTest);
+        assertEquals(skinRight, skinTest);
     }
 
     @Test
-    void givenValidSkin_thenUpdateSkinInDatabaseAndReturnSkin(){
-        Skin skin = new Skin(5L,"Dragon Blue","AWP",100,"Nova","");
-        Skin skinRight = new Skin(5L,"Dragon White","AWP",1000,"Velha","");
+    void givenValidSkin_thenUpdateSkinInDatabaseAndReturnSkin() {
+        Skin skin = new Skin(5L, "Dragon Blue", "AWP", 100, "Nova", "");
+        Skin skinRight = new Skin(5L, "Dragon White", "AWP", 1000, "Velha", "");
         Long idInvalid = skin.getId();
 
         when(repository.save(skinRight)).thenReturn(skinRight);
-        Skin skinTest = service.updateSkin(idInvalid,skinRight);
+        Skin skinTest = service.updateSkin(idInvalid, skinRight);
 
         assertNotNull(skinTest);
-        assertEquals(skinRight,skinTest);
+        assertEquals(skinRight, skinTest);
     }
 
     @Test
-    void givenValidId_thenReturnSkin(){
-        Skin skinRight = new Skin(1L,"Dragao","AWP",100,"Nova","");
+    void givenValidId_thenReturnSkin() {
+        Skin skinRight = new Skin(1L, "Dragao", "AWP", 100, "Nova", "");
         when(repository.findById(skinRight.getId())).thenReturn(Optional.of(skinRight));
 
         Skin skinTest = service.findBySkinId(1L);
-        assertEquals(skinRight,skinTest);
+        assertEquals(skinRight, skinTest);
     }
 
     @Test
-    void givenInvalidId_thenThrowNoSuchElementException(){
+    void givenInvalidId_thenThrowNoSuchElementException() {
         doThrow(new NoSuchElementException("Invalid id")).when(repository).findById(invalidId);
 
         try {
             service.findBySkinId(invalidId);
-        }catch (NoSuchElementException e){
-            assertEquals("Invalid id",e.getMessage());
+        } catch (NoSuchElementException e) {
+            assertEquals("Invalid id", e.getMessage());
         }
     }
 
     @Test
-    void givenId_whenIdIsValid_thenDeleteSkin(){
+    void givenId_whenIdIsValid_thenDeleteSkin() {
         Long id = 1L;
         when(repository.existsById(id)).thenReturn(true);
         doNothing().when(repository).deleteById(id);
@@ -128,30 +128,30 @@ class SkinServiceTest {
     }
 
     @Test
-    void givenId_whenIdIsInvalid_thenThrowNoSuchElementException(){
+    void givenId_whenIdIsInvalid_thenThrowNoSuchElementException() {
         Long idInvalid = invalidId;
         String messageError = "Invalid id";
         when(repository.existsById(idInvalid)).thenReturn(false);
 
         try {
             service.deleteSkin(idInvalid);
-        }catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             verify(repository, times(0)).deleteById(idInvalid);
-            assertEquals(messageError,e.getMessage());
+            assertEquals(messageError, e.getMessage());
         }
     }
 
     @Test
-    void givenMovementList_thenReturnListSkinWithState(){
+    void givenMovementList_thenReturnListSkinWithState() {
         List<Movement> movements = getMovements();
         List<SkinMovement> skinsRight = new ArrayList<>();
-        skinsRight.add(new SkinMovement(1L,1L,false,
-                "Dragon Lore","AWP",100,"Nova de Guerra",""));
+        skinsRight.add(new SkinMovement(1L, 1L, false,
+                "Dragon Lore", "AWP", 100, "Nova de Guerra", ""));
 
-        skinsRight.add(new SkinMovement(2L,1L,false,
+        skinsRight.add(new SkinMovement(2L, 1L, false,
                 "Dragon Red", "Pistol", 200, "Velha de Guerra", ""));
 
-        skinsRight.add(new SkinMovement(4L,4L,false,
+        skinsRight.add(new SkinMovement(4L, 4L, false,
                 "Dragon Blue", "AWP", 400, "Veterana", ""));
 
         for (int i = 0; i < movements.size(); i++) {
@@ -161,7 +161,7 @@ class SkinServiceTest {
         List<SkinMovement> skinMovementsTest = service.getSkinMovements(movements);
 
         assertThat(skinMovementsTest).isNotEmpty();
-        assertIterableEquals(skinsRight,skinMovementsTest);
+        assertIterableEquals(skinsRight, skinMovementsTest);
     }
 
     private List<Skin> getSkins() {
@@ -184,7 +184,7 @@ class SkinServiceTest {
     }
 
     private Skin getIncompleteSkin() {
-        Skin skin = new Skin("Dragao","AWP",100,"Nova","");
+        Skin skin = new Skin("Dragao", "AWP", 100, "Nova", "");
         return skin;
     }
 }
