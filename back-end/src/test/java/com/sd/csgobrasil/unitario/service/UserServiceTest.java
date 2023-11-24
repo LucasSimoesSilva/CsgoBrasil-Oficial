@@ -7,7 +7,9 @@ import com.sd.csgobrasil.entity.User;
 import com.sd.csgobrasil.repository.UserRepository;
 import com.sd.csgobrasil.service.UserService;
 import com.sd.csgobrasil.service.UserSkinService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserServiceTest {
 
     @MockBean
@@ -30,6 +33,19 @@ class UserServiceTest {
 
     @Autowired
     private UserService service;
+
+    User userCorrect;
+
+    UserRegister userRegisterExample;
+
+    UserLogin userLoginExample;
+
+    @BeforeAll
+    void beforeAll() {
+        userCorrect = getUserRight();
+        userRegisterExample = getUserRegister();
+        userLoginExample = getUserLogin();
+    }
 
     @Test
     void givenRequest_thenReturnAnUserList(){
@@ -60,7 +76,7 @@ class UserServiceTest {
 
     @Test
     void givenUserRegister_thenTrueIfRegisterExist(){
-        UserRegister userRegister = new UserRegister("Carlos","ca@gmail","1234");
+        UserRegister userRegister = userRegisterExample;
         when(repository.existsUserByEmailOrNome(userRegister.getEmail(), userRegister.getNome())).thenReturn(true);
 
         boolean check = service.checkIfUserExist(userRegister);
@@ -69,7 +85,7 @@ class UserServiceTest {
 
     @Test
     void givenUserRegister_thenFalseIfRegisterDoNotExist(){
-        UserRegister userRegister = new UserRegister("Carlos","ca@gmail","1234");
+        UserRegister userRegister = userRegisterExample;
         when(repository.existsUserByEmailOrNome(userRegister.getEmail(), userRegister.getNome())).thenReturn(false);
 
         boolean check = service.checkIfUserExist(userRegister);
@@ -78,18 +94,20 @@ class UserServiceTest {
 
     @Test
     void givenLogin_whenLoginIsValid_thenReturnTrue (){
-        UserLogin userLogin = new UserLogin("ca@gmail.com","1234");
+        UserLogin userLogin = userLoginExample;
         when(repository.existsUserByEmailAndSenha(userLogin.getEmail(), userLogin.getSenha())).thenReturn(true);
         boolean check = service.checkLoginUser(userLogin);
         assertTrue(check);
     }
+
     @Test
     void givenLogin_whenLoginIsInvalid_thenReturnFalse () {
-        UserLogin userLogin = new UserLogin("ca@gmail.com", "1234");
+        UserLogin userLogin = userLoginExample;
         when(repository.existsUserByEmailAndSenha(userLogin.getEmail(), userLogin.getSenha())).thenReturn(false);
         boolean check = service.checkLoginUser(userLogin);
         assertFalse(check);
     }
+
     @Test
     void givenEmail_whenEmailIsValid_thenReturnTrue(){
         User userEmail = new User("ca@gmail.com","1234",9090,"cliente");
@@ -97,47 +115,48 @@ class UserServiceTest {
         User userInfo = service.getUserInfo(userEmail.getEmail());
         assertEquals(userEmail,userInfo);
     }
+
     @Test
     void givenEmail_whenEmailIsInvalid_thenReturnFalse(){
-        when(repository.findUsersByEmail("cal@gmail.com")).thenReturn(null);
-        User userInfo = service.getUserInfo("cal@gmail.com");
+        String invalidEmail = "cal@gmail.com";
+        when(repository.findUsersByEmail(invalidEmail)).thenReturn(null);
+        User userInfo = service.getUserInfo(invalidEmail);
         assertNull(userInfo);
     }
     @Test
     void givenUser_thenAddUserToDatabaseAndReturnUserWithId(){
         User user = new User("Carlos","123","ca@gmail");
 
-        User userRight = new User(1L,"Carlos","123","ca@gmail",1000,null, "cliente");
+        User userRight = userCorrect;
 
         when(repository.save(user)).thenReturn(userRight);
 
         User userTest = service.addUser(user);
         assertEquals(userRight,userTest);
     }
-
     @Test
     void givenValidIdAndValidUser_thenUpdateUserInDatabaseAndReturnUser(){
-        User userRight = new User(1L,"Carlos","123","ca@gmail",1000,new ArrayList<>(), "cliente");
+        User userRight = userCorrect;
 
         when(repository.save(userRight)).thenReturn(userRight);
 
         User userTest = service.updateUser(userRight.getId(),userRight);
         assertEquals(userRight,userTest);
     }
-
     @Test
     void givenInvalidIdAndValidUser_thenCreateNewUserInDatabaseAndReturnUser(){
-        User userRight = new User(5L,"Carlos","123","ca@gmail",1000,new ArrayList<>(), "cliente");
+        User user = new User("Lucas", "123", "lucas@gmail", 1000, new ArrayList<>(), "cliente");
+        User userRight = new User(5L,"Lucas", "123", "lucas@gmail", 1000, new ArrayList<>(), "cliente");
 
         when(repository.save(userRight)).thenReturn(userRight);
 
-        User userTest = service.updateUser(-1L,userRight);
+        User userTest = service.updateUser(-1L,user);
         assertEquals(userRight,userTest);
     }
 
     @Test
     void givenValidId_thenReturnUser(){
-        User userRight = new User(1L,"Carlos","123","ca@gmail",1000,new ArrayList<>(), "cliente");
+        User userRight = userCorrect;
 
         when(repository.findById(userRight.getId())).thenReturn(Optional.of(userRight));
 
@@ -147,9 +166,11 @@ class UserServiceTest {
 
     @Test
     void givenInvalidId_thenThrowNoSuchElementException(){
-        doThrow(new NoSuchElementException("Invalid id")).when(repository).findById(-1L);
+        Long invalidId = -1L;
+
+        doThrow(new NoSuchElementException("Invalid id")).when(repository).findById(invalidId);
         try {
-            service.findByUserId(-1L);
+            service.findByUserId(invalidId);
         }catch (NoSuchElementException e){
             assertEquals("Invalid id",e.getMessage());
         }
@@ -179,5 +200,17 @@ class UserServiceTest {
         users.add(user2);
         users.add(user1);
         return users;
+    }
+
+    private User getUserRight() {
+        return new User(1L,"Carlos","123","ca@gmail",1000,new ArrayList<>(), "cliente");
+    }
+
+    private UserRegister getUserRegister() {
+        return new UserRegister("Carlos","ca@gmail","1234");
+    }
+
+    private UserLogin getUserLogin() {
+        return new UserLogin("ca@gmail.com","1234");
     }
 }

@@ -8,7 +8,9 @@ import com.sd.csgobrasil.service.SkinService;
 import com.sd.csgobrasil.service.UserSkinService;
 import com.sd.csgobrasil.util.SkinWithStateImpl;
 import com.sd.csgobrasil.util.UserSkinImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,6 +24,7 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.times;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserSkinServiceTest {
 
     @MockBean
@@ -34,35 +37,49 @@ class UserSkinServiceTest {
     @Autowired
     private UserSkinService service;
 
+    Long idSkin;
+    Long validUserId;
+    Long invalidUserId;
+
+    List<Skin> skinList;
+
+    @BeforeAll
+    void beforeAll() {
+        skinList = getSkins();
+        invalidUserId = -2L;
+        validUserId = 2L;
+        idSkin = 1L;
+    }
+
     @Test
     void givenSkinIdAndUserId_thenAddSkinFromUser(){
-        Long skinsPossuidasId = 1L;
-        Long userId = 2L;
+        Long skinUserId = idSkin;
+        Long userId = validUserId;
 
-        doNothing().when(userRepository).addSkinFromUser(skinsPossuidasId, userId);
+        doNothing().when(userRepository).addSkinFromUser(skinUserId, userId);
 
-        service.addSkinFromUser(skinsPossuidasId,userId);
+        service.addSkinFromUser(skinUserId,userId);
 
-        verify(userRepository, times(1)).addSkinFromUser(skinsPossuidasId,userId);
+        verify(userRepository, times(1)).addSkinFromUser(skinUserId,userId);
     }
 
     @Test
     void givenSkinIdAndUserId_thenDeleteSkinFromUser(){
-        Long skinsPossuidasId = 1L;
-        Long userId = 2L;
+        Long skinUserId = idSkin;
+        Long userId = validUserId;
 
-        doNothing().when(userRepository).deleteSkinFromUser(skinsPossuidasId, userId);
+        doNothing().when(userRepository).deleteSkinFromUser(skinUserId, userId);
 
-        service.deleteSkinFromUser(skinsPossuidasId,userId);
+        service.deleteSkinFromUser(skinUserId,userId);
 
-        verify(userRepository, times(1)).deleteSkinFromUser(skinsPossuidasId,userId);
+        verify(userRepository, times(1)).deleteSkinFromUser(skinUserId,userId);
     }
 
     @Test
     void givenUserId_thenReturnSkinsFromUser(){
-        Long userId = 2L;
+        Long userId = validUserId;
         List<UserSkin> userSkins = getUserSkins();
-        List<Skin> skinsRight = getSkins();
+        List<Skin> skinsRight = skinList;
 
         when(userRepository.listSkinsFromUser(userId)).thenReturn(userSkins);
 
@@ -78,9 +95,9 @@ class UserSkinServiceTest {
 
     @Test
     void givenUserId_whenUserIdIsInvalid_thenReturnEmptyList(){
-        Long userId = -2L;
+        Long userId = invalidUserId;
         List<UserSkin> userSkins = new ArrayList<>();
-        List<Skin> skinsRight = getSkins();
+        List<Skin> skinsRight = skinList;
 
         when(userRepository.listSkinsFromUser(userId)).thenReturn(userSkins);
 
@@ -101,7 +118,7 @@ class UserSkinServiceTest {
         skinWithStateListRight.add(new SkinWithStateImpl(2L, "Dragon Red", "Pistol", 100,
                 "Velha de Guerra", "",true,true,2L));
 
-        Long userId = 2L;
+        Long userId = validUserId;
 
         when(userRepository.listSkinsWithStateFromUser(userId)).thenReturn(skinWithStateListRight);
 
@@ -114,7 +131,7 @@ class UserSkinServiceTest {
     void givenUserId_whenUserIdIsInvalid_thenReturnEmptySkinWithStateList(){
         List<SkinWithState> skinWithStateListRight = new ArrayList<>();
 
-        Long userId = -2L;
+        Long userId = invalidUserId;
 
         when(userRepository.listSkinsWithStateFromUser(userId)).thenReturn(skinWithStateListRight);
 

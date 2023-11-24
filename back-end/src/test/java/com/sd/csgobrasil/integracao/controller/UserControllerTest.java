@@ -2,7 +2,6 @@ package com.sd.csgobrasil.integracao.controller;
 
 import com.sd.csgobrasil.entity.DTO.UserLogin;
 import com.sd.csgobrasil.entity.DTO.UserRegister;
-import com.sd.csgobrasil.entity.Skin;
 import com.sd.csgobrasil.entity.User;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,20 +14,17 @@ import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @AutoConfigureTestDatabase
@@ -37,6 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 public class UserControllerTest {
 
     @Autowired
@@ -117,6 +114,75 @@ public class UserControllerTest {
         assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
+    @Test
+    void givenValidUser_whenIdIsValid_thenUpdateUserInDatabase() throws Exception {
+        User userRight = new User(1L, "Lucas", "9090", "luc@gmail", 1000, null, "cliente");
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        put("/user/{id}",userRight.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(userJson.write(userRight).getJson())
+                )
+                .andReturn().getResponse();
+
+        User userTest = userJson.parse(response.getContentAsString()).getObject();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(userRight,userTest);
+    }
+
+    @Test
+    void givenValidUser_whenIdIsInvalid_thenUpdateUserInDatabase() throws Exception {
+        User userRequest = new User(-1L, "Lucas", "9090", "luc@gmail", 1000, null,
+                "cliente");
+
+        User userRight = new User(5L, "Lucas", "9090", "luc@gmail", 1000, null,
+                "cliente");
+
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        put("/user/{id}",userRequest.getId())
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(userJson.write(userRequest).getJson())
+                )
+                .andReturn().getResponse();
+
+        User userTest = userJson.parse(response.getContentAsString()).getObject();
+
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
+        assertEquals(userRight,userTest);
+    }
+
+    @Test
+    void givenValidId_thenDeleteUserInDatabaseAndReturnNoContent() throws Exception {
+        Long id = 1L;
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        delete("/user/{id}",id)
+                )
+                .andExpect(content().string(""))
+                .andReturn().getResponse();
+
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+    }
+
+    @Test
+    void givenInvalidId_thenDoNothingInDatabaseAndReturnNoContent() throws Exception {
+        Long id = -1L;
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        delete("/user/{id}",id)
+                )
+                .andExpect(content().string(""))
+                .andReturn().getResponse();
+
+        assertEquals(HttpStatus.NO_CONTENT.value(), response.getStatus());
+    }
+
     @DisplayName("method findByUserId")
     @Test
     void getUserById() throws Exception {
@@ -147,7 +213,7 @@ public class UserControllerTest {
 
     @DisplayName("method checkUser")
     @Test
-    void  shoudReturnATrueLoginUser() throws Exception{
+    void shoudReturnATrueLoginUser() throws Exception{
         UserLogin userLogin = new UserLogin("ca@gmail", "9090");
 
         MockHttpServletResponse response = mvc
@@ -165,7 +231,7 @@ public class UserControllerTest {
     }
     @DisplayName("method checkUser")
     @Test
-    void  shoudReturnAFalseLoginUser() throws Exception{
+    void shoudReturnAFalseLoginUser() throws Exception{
         UserLogin userLogin = new UserLogin("email@email.com", "123");
 
         MockHttpServletResponse response = mvc
@@ -183,7 +249,7 @@ public class UserControllerTest {
     }
     @DisplayName("method checkIfUserExist")
     @Test
-    void  shoudReturnATrueUserRegister() throws Exception{
+    void shoudReturnATrueUserRegister() throws Exception{
         UserRegister userRegister = new UserRegister("Carlos",
                 "ca@gmail", "9090");
 
@@ -203,7 +269,7 @@ public class UserControllerTest {
     }
     @DisplayName("method checkIfUserExist")
     @Test
-    void  shoudReturnAFalseUserRegister() throws Exception{
+    void shoudReturnAFalseUserRegister() throws Exception{
         UserRegister userRegister = new UserRegister("vandaime",
                 "vandaime@gmail.com", "123");
 
@@ -223,7 +289,7 @@ public class UserControllerTest {
 
     @DisplayName("method saveUser")
     @Test
-    void  shouldReturANewUser() throws Exception{
+    void shouldReturANewUser() throws Exception{
         User user = new User(10L,"Vandaime","6789","vandaime@email.com",0,new ArrayList<>(),  null);
 
         MockHttpServletResponse response = mvc

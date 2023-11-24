@@ -22,11 +22,6 @@ public class ExceptionController {
         return ResponseEntity.badRequest().body(ex.getMessage());
     }
 
-    @ExceptionHandler(SQLIntegrityConstraintViolationException.class)
-    public ResponseEntity<String> sqlQueryErrorExecution(SQLIntegrityConstraintViolationException ex){
-        return ResponseEntity.badRequest().body(ex.getMessage());
-    }
-
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<String> sqlDataErrorExecution(DataIntegrityViolationException ex){
         return ResponseEntity.badRequest().body(ex.getMessage());

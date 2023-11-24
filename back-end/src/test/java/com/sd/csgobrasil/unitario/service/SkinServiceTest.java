@@ -3,10 +3,11 @@ package com.sd.csgobrasil.unitario.service;
 import com.sd.csgobrasil.entity.DTO.SkinMovement;
 import com.sd.csgobrasil.entity.Movement;
 import com.sd.csgobrasil.entity.Skin;
-import com.sd.csgobrasil.entity.User;
 import com.sd.csgobrasil.repository.SkinRepository;
 import com.sd.csgobrasil.service.SkinService;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class SkinServiceTest {
 
     @MockBean
@@ -28,11 +30,24 @@ class SkinServiceTest {
 
     @Autowired
     private SkinService service;
+
+    List<Skin> skinList;
+    Long invalidId;
+
+    Skin incompleteSkin;
+
+    @BeforeAll
+    void beforeAll() {
+        skinList = getSkins();
+        invalidId = -1L;
+        incompleteSkin = getIncompleteSkin();
+    }
+
     @Test
     void givenRequest_thenReturnAList(){
-        when(repository.findAll()).thenReturn(getSkins());
+        when(repository.findAll()).thenReturn(skinList);
         List<Skin> skinsTest = service.listSkins();
-        assertEquals(getSkins(),skinsTest);
+        assertEquals(skinList,skinsTest);
     }
 
     @Test
@@ -47,7 +62,7 @@ class SkinServiceTest {
 
     @Test
     void givenValidSkin_thenReturnTheSkinWithId(){
-        Skin skin = new Skin("Dragao","AWP",100,"Nova","");
+        Skin skin = incompleteSkin;
         Skin skinRight = new Skin(1L,"Dragao","AWP",100,"Nova","");
 
         when(repository.save(skin)).thenReturn(skinRight);
@@ -59,9 +74,9 @@ class SkinServiceTest {
 
     @Test
     void givenInvalidIdSkin_thenCreateNewSkinInDatabaseAndReturnSkin(){
-        Skin skin = new Skin("Dragao","AWP",100,"Nova","");
+        Skin skin = incompleteSkin;
         Skin skinRight = new Skin(5L,"Dragao","AWP",100,"Nova","");
-        Long idInvalid = -1L;
+        Long idInvalid = invalidId;
 
         when(repository.save(skin)).thenReturn(skinRight);
         Skin skinTest = service.updateSkin(idInvalid,skin);
@@ -94,10 +109,10 @@ class SkinServiceTest {
 
     @Test
     void givenInvalidId_thenThrowNoSuchElementException(){
-        doThrow(new NoSuchElementException("Invalid id")).when(repository).findById(-1L);
+        doThrow(new NoSuchElementException("Invalid id")).when(repository).findById(invalidId);
 
         try {
-            service.findBySkinId(-1L);
+            service.findBySkinId(invalidId);
         }catch (NoSuchElementException e){
             assertEquals("Invalid id",e.getMessage());
         }
@@ -114,7 +129,7 @@ class SkinServiceTest {
 
     @Test
     void givenId_whenIdIsInvalid_thenThrowNoSuchElementException(){
-        Long idInvalid = -1L;
+        Long idInvalid = invalidId;
         String messageError = "Invalid id";
         when(repository.existsById(idInvalid)).thenReturn(false);
 
@@ -140,7 +155,7 @@ class SkinServiceTest {
                 "Dragon Blue", "AWP", 400, "Veterana", ""));
 
         for (int i = 0; i < movements.size(); i++) {
-            when(repository.findById(movements.get(i).getIdSkin())).thenReturn(Optional.of(getSkins().get(i)));
+            when(repository.findById(movements.get(i).getIdSkin())).thenReturn(Optional.of(skinList.get(i)));
         }
 
         List<SkinMovement> skinMovementsTest = service.getSkinMovements(movements);
@@ -166,5 +181,10 @@ class SkinServiceTest {
         movements.add(new Movement(3L, 1L, 2L, 2L, true, 567));
         movements.add(new Movement(4L, 4L, 2L, 2L, false, 567));
         return movements;
+    }
+
+    private Skin getIncompleteSkin() {
+        Skin skin = new Skin("Dragao","AWP",100,"Nova","");
+        return skin;
     }
 }

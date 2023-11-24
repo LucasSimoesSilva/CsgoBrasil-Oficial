@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -196,6 +197,28 @@ public class SkinControllerTest {
         assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
         assertEquals("",responseMessage);
     }
+
+
+    @DisplayName("method deleteSkin")
+    @Test
+    void givenValidId_whenHaveUserWithTheSkin_thenThrowExceptionDataIntegrityViolationException() throws Exception {
+        String messageErrorCheck = "REFERENCES PUBLIC.SKIN(ID)";
+
+        doThrow(new DataIntegrityViolationException("Error in REFERENCES PUBLIC.SKIN(ID)"))
+                .when(service).deleteSkin(1L);
+
+        MockHttpServletResponse response = mvc
+                .perform(
+                        delete("/skin/{id}",1L)
+                )
+                .andReturn().getResponse();
+
+        String responseMessage = response.getContentAsString();
+
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertTrue(responseMessage.contains(messageErrorCheck));
+    }
+
     @DisplayName("method deleteSkin")
     @Test
     public void deleteValidId() throws Exception {

@@ -10,7 +10,9 @@ import com.sd.csgobrasil.service.SkinService;
 import com.sd.csgobrasil.service.UserService;
 import com.sd.csgobrasil.service.UserSkinService;
 import com.sd.csgobrasil.util.ReportImpl;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -22,10 +24,10 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MovementServiceTest {
 
     @MockBean
@@ -46,9 +48,22 @@ class MovementServiceTest {
     @Autowired
     MovementService service;
 
+    List<Movement> movementList;
+    List<Report> reportList;
+    Movement movementCorrect;
+    Long invalidId;
+
+    @BeforeAll
+    void beforeAll() {
+        movementList = getMovements();
+        reportList = getReports();
+        movementCorrect = getMovementRight();
+        invalidId = -1L;
+    }
+
     @Test
     void givenRequest_thenReturnAMovementList(){
-        List<Movement> movementsRight = getMovements();
+        List<Movement> movementsRight = movementList;
         when(repository.findAll()).thenReturn(movementsRight);
 
         List<Movement> movementsTest = service.listMovement();
@@ -70,9 +85,9 @@ class MovementServiceTest {
 
     @Test
     void givenMovement_thenAddMovementToDatabaseAndReturnMovementWithId(){
-        Movement movement = new Movement(3L,3L,false,7000);
+        Movement movement = new Movement(3L,3L,true,7000);
 
-        Movement movementRight = new Movement(1L, 3L, 1L, 3L, false, 7000);
+        Movement movementRight = movementCorrect;
 
         when(repository.save(movement)).thenReturn(movementRight);
 
@@ -82,7 +97,7 @@ class MovementServiceTest {
 
     @Test
     void givenValidIdAndValidMovement_thenUpdateMovementInDatabaseAndReturnMovement(){
-        Movement movementRight = new Movement(1L, 3L, 1L, 3L, true, 7000);
+        Movement movementRight = movementCorrect;
 
         when(repository.save(movementRight)).thenReturn(movementRight);
 
@@ -92,7 +107,7 @@ class MovementServiceTest {
 
     @Test
     void givenValidId_thenReturnMovement(){
-        Movement movementRight = new Movement(1L, 3L, 1L, 3L, true, 7000);
+        Movement movementRight = movementCorrect;
 
         when(repository.findById(movementRight.getIdVenda())).thenReturn(Optional.of(movementRight));
 
@@ -102,10 +117,10 @@ class MovementServiceTest {
 
     @Test
     void givenInvalidId_thenThrowNoSuchElementException(){
-        doThrow(new NoSuchElementException("Invalid id")).when(repository).findById(-1L);
+        doThrow(new NoSuchElementException("Invalid id")).when(repository).findById(invalidId);
 
         try {
-            service.findByMovementId(-1L);
+            service.findByMovementId(invalidId);
         }catch (NoSuchElementException e){
             assertEquals("Invalid id",e.getMessage());
         }
@@ -121,7 +136,7 @@ class MovementServiceTest {
 
     @Test
     void givenRequest_thenReturnAListWithTheReports(){
-        List<Report> reportsRight = getReports();
+        List<Report> reportsRight = reportList;
         when(repository.makeReport()).thenReturn(reportsRight);
 
         List<Report> reportsTest = service.makeReport();
@@ -221,5 +236,9 @@ class MovementServiceTest {
         movements.add(new Movement(22L, 3L, null, 14L, false, 8000));
         movements.add(new Movement(40L, 4L, null, 32L, false, 1500));
         return movements;
+    }
+
+    private Movement getMovementRight() {
+        return new Movement(1L, 3L, 1L, 3L, true, 7000);
     }
 }

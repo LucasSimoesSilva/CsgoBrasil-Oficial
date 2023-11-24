@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 @TestPropertySource(locations = "classpath:application-test.properties")
 @SpringBootTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
-public class SkinControllerTest {
+class SkinControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -44,7 +44,7 @@ public class SkinControllerTest {
 
     @DisplayName("method listSkins")
     @Test
-    public void getControllerReturnSkins() throws Exception {
+    void getControllerReturnSkins() throws Exception {
         Skin skin = new Skin(1L, "Dragon Lore", "AWP", 10000, "Factory New", "AWP_Dragon_Lore.png");
 
         MockHttpServletResponse response = mvc.
@@ -60,7 +60,7 @@ public class SkinControllerTest {
 
     @DisplayName("method findBySkinId")
     @Test
-    public void getControllerReturnSkinByID() throws Exception {
+    void getControllerReturnSkinByID() throws Exception {
         Long id = 1L;
 
         Skin skin = new Skin(id, "Dragon Lore", "AWP", 10000, "Factory New", "AWP_Dragon_Lore.png");
@@ -78,7 +78,7 @@ public class SkinControllerTest {
     }
     @DisplayName("method findBySkinId")
     @Test
-    public void getControllerReturnBadRequestWhenIdIsNotValid() throws Exception {
+    void getControllerReturnBadRequestWhenIdIsNotValid() throws Exception {
 
         MockHttpServletResponse response = mvc.
                 perform(get("/skin/{id}", "0")).andReturn().getResponse();
@@ -90,7 +90,7 @@ public class SkinControllerTest {
     }
     @DisplayName("method saveSkin")
     @Test
-    public void postSaveSkinValid() throws Exception {
+    void postSaveSkinValid() throws Exception {
         Skin skin = new Skin(33L, "Dragon Green", "AWP", 1000, "Nova de Guerra",
                 "image");
 
@@ -114,7 +114,7 @@ public class SkinControllerTest {
     }
     @DisplayName("method saveSkin")
     @Test
-    public void postDoNotSaveInvalidSkin() throws Exception {
+    void postDoNotSaveInvalidSkin() throws Exception {
         Skin skin = new Skin(0L, null, "AWP", 100, "Nova de Guerra", "");
         String messageNull = "não deve ser nulo";
         String messageBlank = "não deve estar em branco";
@@ -159,7 +159,7 @@ public class SkinControllerTest {
     }
     @DisplayName("method updateSkin")
     @Test
-    public void putUpdateInvalidObject() throws Exception {
+    void putUpdateInvalidObject() throws Exception {
         Skin skin = new Skin(0L, null, "AWP", 100, "Nova de Guerra", "");
         String messageNull = "não deve ser nulo";
         String messageBlank = "não deve estar em branco";
@@ -181,7 +181,7 @@ public class SkinControllerTest {
     }
     @DisplayName("method deleteSkin")
     @Test
-    public void givenValidId_whenDoNotHaveUserWithTheSkin_thenDelete() throws Exception {
+    void givenValidId_whenDoNotHaveUserWithTheSkin_thenDelete() throws Exception {
 
         MockHttpServletResponse response = mvc
                 .perform(
@@ -198,14 +198,14 @@ public class SkinControllerTest {
 
     @DisplayName("method deleteSkin")
     @Test
-    public void givenValidId_whenHaveUserWithTheSkin_thenThrowExceptionSQLIntegrityConstraintViolationException() throws Exception {
+    void givenValidId_whenHaveUserWithTheSkin_thenThrowExceptionDataIntegrityViolationException() throws Exception {
         String messageErrorCheck = "REFERENCES PUBLIC.SKIN(ID)";
+
         MockHttpServletResponse response = mvc
                 .perform(
                         delete("/skin/{id}",1L)
                 )
                 .andReturn().getResponse();
-
 
         String responseMessage = response.getContentAsString();
 
@@ -215,7 +215,7 @@ public class SkinControllerTest {
 
     @DisplayName("method deleteSkin")
     @Test
-    public void deleteInvalidId() throws Exception {
+    void deleteInvalidId() throws Exception {
 
         MockHttpServletResponse response = mvc
                 .perform(
