@@ -58,7 +58,6 @@ class UserControllerTest {
     @Autowired
     private JacksonTester<UserRegister> userRegisterJson;
 
-    @DisplayName("method listUsers")
     @Test
     void givenRequestGET_thenReturnUserListAndStatusOK() throws Exception {
         List<User> users = getUsers();
