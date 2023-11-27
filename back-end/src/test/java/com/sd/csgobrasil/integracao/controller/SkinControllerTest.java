@@ -68,9 +68,7 @@ class SkinControllerTest {
         Skin skinResponse = skinJson.parse(response.getContentAsString()).getObject();
 
 
-        assertEquals(skin.getNome(), skinResponse.getNome());
-        assertEquals(skin.getPreco(), skinResponse.getPreco());
-        assertEquals(skin.getRaridade(), skinResponse.getRaridade());
+        assertEquals(skin, skinResponse);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
         assertNotNull(skinResponse);
     }
