@@ -26,7 +26,7 @@ class MovementRepositoryTest {
     MovementRepository repository;
 
     @Test
-    void givenRequest_whenEstadoVendaIsTrue_theReturnVendedorAndComprador() {
+    void givenRequest_whenEstadoVendaIsTrue_thenReturnVendedorAndComprador() {
         List<String> nomeCompradorList = new ArrayList<>(List.of("Carlos", "Administrador"));
         List<String> nomeVendedorList = new ArrayList<>(List.of("EstoqueDinamico"));
 
