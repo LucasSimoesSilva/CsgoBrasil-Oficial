@@ -69,12 +69,7 @@ class UserControllerTest {
 
         assertThat(responseObject).isNotEmpty();
         for (int i = 0; i < users.size(); i++) {
-            assertEquals(users.get(i).getNome(), responseObject.get(i).getNome());
-            assertEquals(users.get(i).getId(), responseObject.get(i).getId());
-            assertEquals(users.get(i).getPontos(), responseObject.get(i).getPontos());
-            assertEquals(users.get(i).getSenha(), responseObject.get(i).getSenha());
-            assertEquals(users.get(i).getEmail(), responseObject.get(i).getEmail());
-            assertEquals(users.get(i).getCargo(), responseObject.get(i).getCargo());
+            assertEquals(users.get(i), responseObject.get(i));
         }
 
         assertIterableEquals(users, responseObject);

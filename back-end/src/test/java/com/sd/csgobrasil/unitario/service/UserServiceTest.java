@@ -48,7 +48,7 @@ class UserServiceTest {
     }
 
     @Test
-    void givenRequest_thenReturnAnUserList() {
+    void givenRequest_whenIdIsValid_thenReturnAnUserList() {
         List<User> users = getUsers();
 
         for (User user : users) {
@@ -62,7 +62,7 @@ class UserServiceTest {
     }
 
     @Test
-    void givenRequest_thenReturnAnEmptyUserList() {
+    void givenRequest_whenIdIsInvalid_thenReturnAnEmptyUserList() {
         List<User> users = new ArrayList<>();
 
         when(userSkinService.listSkinsFromUser(null)).thenReturn(null);

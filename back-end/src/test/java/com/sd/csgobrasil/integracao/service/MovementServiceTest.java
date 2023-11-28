@@ -61,7 +61,7 @@ class MovementServiceTest {
         try {
             service.addMovement(movementInvalid);
         } catch (ConstraintViolationException e) {
-            assertTrue(e.getMessage().contains("'não deve ser nulo'"));
+            assertTrue(e.getMessage().contains("não deve ser nulo"));
         }
     }
 

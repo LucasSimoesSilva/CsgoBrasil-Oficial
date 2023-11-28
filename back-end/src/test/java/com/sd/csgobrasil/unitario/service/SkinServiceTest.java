@@ -144,19 +144,7 @@ class SkinServiceTest {
     @Test
     void givenMovementList_thenReturnListSkinWithState() {
         List<Movement> movements = getMovements();
-        List<SkinMovement> skinsRight = new ArrayList<>();
-        skinsRight.add(new SkinMovement(1L, 1L, false,
-                "Dragon Lore", "AWP", 100, "Nova de Guerra", ""));
-
-        skinsRight.add(new SkinMovement(2L, 1L, false,
-                "Dragon Red", "Pistol", 200, "Velha de Guerra", ""));
-
-        skinsRight.add(new SkinMovement(4L, 4L, false,
-                "Dragon Blue", "AWP", 400, "Veterana", ""));
-
-        for (int i = 0; i < movements.size(); i++) {
-            when(repository.findById(movements.get(i).getIdSkin())).thenReturn(Optional.of(skinList.get(i)));
-        }
+        List<SkinMovement> skinsRight = getSkinMovements(movements);
 
         List<SkinMovement> skinMovementsTest = service.getSkinMovements(movements);
 
@@ -184,7 +172,23 @@ class SkinServiceTest {
     }
 
     private Skin getIncompleteSkin() {
-        Skin skin = new Skin("Dragao", "AWP", 100, "Nova", "");
-        return skin;
+        return new Skin("Dragao", "AWP", 100, "Nova", "");
+    }
+
+    private List<SkinMovement> getSkinMovements(List<Movement> movements) {
+        List<SkinMovement> skinsRight = new ArrayList<>();
+        skinsRight.add(new SkinMovement(1L, 1L, false,
+                "Dragon Lore", "AWP", 100, "Nova de Guerra", ""));
+
+        skinsRight.add(new SkinMovement(2L, 1L, false,
+                "Dragon Red", "Pistol", 200, "Velha de Guerra", ""));
+
+        skinsRight.add(new SkinMovement(4L, 4L, false,
+                "Dragon Blue", "AWP", 400, "Veterana", ""));
+
+        for (int i = 0; i < movements.size(); i++) {
+            when(repository.findById(movements.get(i).getIdSkin())).thenReturn(Optional.of(skinList.get(i)));
+        }
+        return skinsRight;
     }
 }

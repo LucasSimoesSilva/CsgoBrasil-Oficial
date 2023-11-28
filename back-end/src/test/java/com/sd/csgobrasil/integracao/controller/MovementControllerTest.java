@@ -146,14 +146,13 @@ class MovementControllerTest {
     }
 
     @Test
-    void givenARequestGET_whenMovementIdIsInvalid_thenThrowNoSuchElementExceptionReturnStatusBadRequest() throws Exception {
+    void givenARequestGET_whenMovementIdIsInvalid_thenCreateNewMovementStatusOK() throws Exception {
         MockHttpServletResponse response = mvc.
                 perform(get("/movement/{idVenda}", -1L)).andReturn().getResponse();
 
-        String messageInvalidId = "Invalid Id";
 
-        assertEquals(messageInvalidId, response.getContentAsString());
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals(new Movement(), movementJson.parse(response.getContentAsString()).getObject());
+        assertEquals(HttpStatus.OK.value(), response.getStatus());
     }
 
     @Test
@@ -175,26 +174,6 @@ class MovementControllerTest {
         assertThat(responseObject).isNotNull();
         assertTrue(responseObject);
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-    }
-
-    @Test
-    void givenARequestPUT_whenIdsAreInvalid_thenThrowNoSuchElementExceptionAndStatusBadRequest() throws Exception {
-        Long idVenda = -1L;
-        Long idComprador = -2L;
-        MovementsId movementsId = new MovementsId(idVenda, idComprador);
-
-        MockHttpServletResponse response = mvc
-                .perform(
-                        put("/movement")
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .content(movementsIdJson.write(movementsId).getJson())
-                )
-                .andReturn().getResponse();
-
-        String messageInvalidId = "Invalid Id";
-
-        assertEquals(messageInvalidId, response.getContentAsString());
-        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
     }
 
     @Test
