@@ -7,7 +7,6 @@
 - Samuel Benjamin Nascimento de Amorim | RA: 12522196859
 - Gabriel Santos Pontes | RA: 12523214406
 - Leonardo Rondam de Oliveira | RA: 1252329487
-- Lucas Simões Carvalho da Silva | RA: 12522161179
 
 ## Back-end
 - Linguagem: Java JDK 17.0.3.1
