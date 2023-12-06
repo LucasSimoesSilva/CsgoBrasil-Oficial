@@ -11,7 +11,7 @@
 ## Back-end
 - Linguagem: Java JDK 17.0.3.1
 - IDE: IntelliJ IDEA Communit Edition 2022.2.3
-- Tecnlogia utilizada: REST API
+- Tecnologia utilizada: REST API
 - Banco de dados: MySQL
 - Interface usada para aplicação de scripts mysql: MySQL Workbench 8.0
 
