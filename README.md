@@ -1,5 +1,5 @@
 # CSGOBrasil
-- Projeto para a avaliação A3 da UC de Gestão e Qualidade de Software
+- Projeto para a avaliação A3 das UCs de Gestão e Qualidade de Software; Sistemas Distribuídos e Mobile; Usabilidade, Desenvolvimento Web, Mobile e Jogos
 
 ## Integrantes
 - Lucas Simões Carvalho da Silva | RA: 12522161179
@@ -7,6 +7,10 @@
 - Samuel Benjamin Nascimento de Amorim | RA: 12522196859
 - Gabriel Santos Pontes | RA: 12523214406
 - Leonardo Rondam de Oliveira | RA: 1252329487
+- Andy Hyong Tae Choi Youn | RA: 12522142446
+- Felipe Daura | RA: 1252214120
+- Giovanni Lopes Campos | RA: 12522149685
+- Marcelo Henrique da Silva Ventura | RA: 12522128126
 
 ## Back-end
 - Linguagem: Java JDK 17.0.3.1
